@@ -1,54 +1,38 @@
 package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.entity.Users;
+import sliit.oop_server_app.repository.CategoryRepository;
 import sliit.oop_server_app.repository.UsersRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/users")
-public class UsersController {
+@RequestMapping(value = "/category")
+public class CategoryController {
     @Autowired
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private CategoryRepository categoryRepository;
 
 
 
     @GetMapping(produces = "application/json")
-    public List<Users> get() {
-        List<Users> users = this.usersRepository.findAll();
-        return users;
+    public List<Category> get() {
+        List<Category> categories = this.categoryRepository.findAll();
+        return categories;
     }
 
-    @PostMapping("/register")
-    public List<Users> registerUsers(@RequestBody List<Users> users) {
-        // 1. Filter out users that already exist based on Gmail
-        List<Users> newUsers = users.stream()
-                .filter(user -> !usersRepository.existsByGmail(user.getGmail()))
-                .collect(Collectors.toList());
-
-        if (newUsers.isEmpty()) {
+    @PostMapping("/save")
+    public List<Category> saveUsers(@RequestBody List<Category> categories) {
+        if (categories.isEmpty()) {
             return Collections.emptyList();
         }
-
-        // 2. Loop through the list and encrypt each password
-        newUsers.forEach(user -> {
-            String encodedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
-        });
-
-        // 3. Save the entire list of new users
-        return usersRepository.saveAll(newUsers);
+        System.out.print(categories);
+        return categoryRepository.saveAll(categories);
     }
 
 //    @PutMapping("/update")
