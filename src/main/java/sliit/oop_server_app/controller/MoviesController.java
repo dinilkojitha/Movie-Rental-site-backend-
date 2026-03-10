@@ -23,7 +23,6 @@ public class MoviesController {
 
 
 
-
     @GetMapping(produces = "application/json")
     public List<Movies> get() {
         List<Movies> movies = this.moviesRepository.findAll();
