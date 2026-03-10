@@ -2,37 +2,35 @@ package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sliit.oop_server_app.entity.Category;
-import sliit.oop_server_app.entity.Users;
-import sliit.oop_server_app.repository.CategoryRepository;
-import sliit.oop_server_app.repository.UsersRepository;
+import sliit.oop_server_app.entity.Ratings;
+import sliit.oop_server_app.repository.RatingsRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/category")
-public class CategoryController {
+@RequestMapping(value = "/ratings")
+public class RatingsController {
     @Autowired
-    private CategoryRepository categoryRepository;
+    private RatingsRepository ratingsRepository;
+
 
 
 
     @GetMapping(produces = "application/json")
-    public List<Category> get() {
-        List<Category> categories = this.categoryRepository.findAll();
-        return categories;
+    public List<Ratings> get() {
+        List<Ratings> ratings = this.ratingsRepository.findAll();
+        return ratings;
     }
 
     @PostMapping("/save")
-    public List<Category> saveUsers(@RequestBody List<Category> categories) {
-        if (categories.isEmpty()) {
+    public List<Ratings> saveUsers(@RequestBody List<Ratings> ratings) {
+        if (ratings.isEmpty()) {
             return Collections.emptyList();
         }
-//        System.out.print(categories);
-        return categoryRepository.saveAll(categories);
+        System.out.print(ratings);
+        return ratingsRepository.saveAll(ratings);
     }
 
 //    @PutMapping("/update")
