@@ -3,6 +3,7 @@ package sliit.oop_server_app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.entity.Movies;
 import sliit.oop_server_app.entity.Users;
@@ -23,10 +24,27 @@ public class MoviesController {
 
 
 
+
     @GetMapping(produces = "application/json")
     public List<Movies> get() {
         List<Movies> movies = this.moviesRepository.findAll();
         return movies;
+    }
+
+//    @GetMapping("/sort")
+//    public List<Movies> sortMovies(@RequestParam String query){
+//
+//        String regex = "^" + query;
+//        List<Movies> movies = this.moviesRepository.findByNameRegexIgnoreCase(regex);
+//        return movies;
+//    }
+
+    @GetMapping("/search/{query}")
+    public List<Movies> searchMovies(@PathVariable String query) {
+
+        String regex = "^" + query;   // search starting letters
+        return moviesRepository.findByNameRegexIgnoreCase(regex);
+
     }
 
     @GetMapping("/sort/{id}")

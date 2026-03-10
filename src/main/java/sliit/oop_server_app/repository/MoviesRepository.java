@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface MoviesRepository extends MongoRepository<Movies, String>{
     List<Movies> getMoviesByCategoryid(String categoryid);
+
+    List<Movies> findByNameRegexIgnoreCase(String regex);
 }
