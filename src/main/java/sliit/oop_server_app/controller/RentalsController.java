@@ -1,14 +1,12 @@
 package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import sliit.oop_server_app.entity.Rentals;
 import sliit.oop_server_app.repository.RentalsRepository;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin
 @RestController
@@ -17,8 +15,6 @@ public class RentalsController {
     @Autowired
     private RentalsRepository rentalsRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
 
 
@@ -28,25 +24,13 @@ public class RentalsController {
         return rentals;
     }
 
-    @PostMapping("/register")
-    public List<Rentals> registerRentals(@RequestBody List<Rentals> rentals) {
-        // 1. Filter out rentals that already exist based on Gmail
-        List<Rentals> newRentals = rentals.stream()
-                .filter(user -> !rentalsRepository.existsByGmail(user.getGmail()))
-                .collect(Collectors.toList());
-
-        if (newRentals.isEmpty()) {
+    @PostMapping("/save")
+    public List<Rentals> saveUsers(@RequestBody List<Rentals> rentals) {
+        if (rentals.isEmpty()) {
             return Collections.emptyList();
         }
-
-        // 2. Loop through the list and encrypt each password
-        newRentals.forEach(user -> {
-            String encodedPassword = passwordEncoder.encode(user.getPassword());
-            user.setPassword(encodedPassword);
-        });
-
-        // 3. Save the entire list of new rentals
-        return rentalsRepository.saveAll(newRentals);
+        System.out.print(rentals);
+        return rentalsRepository.saveAll(rentals);
     }
 
 //    @PutMapping("/update")
