@@ -6,5 +6,5 @@ import sliit.oop_server_app.entity.Rentals;
 
 @Repository
 public interface RentalsRepository extends MongoRepository<Rentals, String>{
-    boolean existsByGmail(String gmail);
+
 }
