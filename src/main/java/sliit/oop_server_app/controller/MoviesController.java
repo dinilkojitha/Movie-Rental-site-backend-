@@ -29,6 +29,12 @@ public class MoviesController {
         return movies;
     }
 
+    @GetMapping("/sort/{id}")
+    public List<Movies> getbycategory(@PathVariable String id){
+        List<Movies> movies = this.moviesRepository.getMoviesByCategoryid(id);
+        return movies;
+    }
+
     @PostMapping("/save")
     public List<Movies> saveUsers(@RequestBody List<Movies> movies) {
         if (movies.isEmpty()) {

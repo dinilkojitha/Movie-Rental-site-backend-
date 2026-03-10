@@ -3,6 +3,7 @@ package sliit.oop_server_app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import sliit.oop_server_app.entity.Category;
+import sliit.oop_server_app.entity.Movies;
 import sliit.oop_server_app.entity.Users;
 import sliit.oop_server_app.repository.CategoryRepository;
 import sliit.oop_server_app.repository.UsersRepository;
@@ -25,6 +26,9 @@ public class CategoryController {
         List<Category> categories = this.categoryRepository.findAll();
         return categories;
     }
+
+
+
 
     @PostMapping("/save")
     public List<Category> saveUsers(@RequestBody List<Category> categories) {

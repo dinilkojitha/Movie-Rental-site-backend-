@@ -14,7 +14,7 @@ public class Movies {
     private String name;
     private String language;
     private String country;
-    private Time hours;
+    private String hours;
     private String shortdescription ;
     private String description ;
     private String image;
@@ -66,11 +66,11 @@ public class Movies {
         this.country = country;
     }
 
-    public Time getHours() {
+    public String getHours() {
         return hours;
     }
 
-    public void setHours(Time hours) {
+    public void setHours(String hours) {
         this.hours = hours;
     }
 
