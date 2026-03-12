@@ -14,6 +14,8 @@ public class Users {
     private int ratecount;
     private String rank;
 
+    private boolean admin;
+
     public String getId() {
         return id;
     }
@@ -68,5 +70,13 @@ public class Users {
 
     public void setRank(String rank) {
         this.rank = rank;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }
