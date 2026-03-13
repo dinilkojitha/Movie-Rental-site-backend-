@@ -1,9 +1,12 @@
 package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.web.server.ResponseStatusException;
 import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.entity.Movies;
 import sliit.oop_server_app.entity.Users;
@@ -44,7 +47,6 @@ public class MoviesController {
 
         String regex = "^" + query;   // search starting letters
         return moviesRepository.findByNameRegexIgnoreCase(regex);
-
     }
 
     @GetMapping("/sort/{id}")
@@ -60,6 +62,33 @@ public class MoviesController {
         }
         System.out.print(movies);
         return moviesRepository.saveAll(movies);
+    }
+
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Movies> updateMovies(@PathVariable String id, @RequestBody Movies movies) {
+        Movies update = moviesRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+
+
+        update.setName(movies.getName());
+        update.setHours(movies.getHours());
+        update.setCategoryid(movies.getCategoryid());
+        update.setCountry(movies.getCountry());
+        update.setLanguage(movies.getLanguage());
+        update.setImdb(movies.getImdb());
+        update.setActors(movies.getActors());
+        update.setDescription(movies.getDescription());
+        update.setPrice(movies.getPrice());
+        update.setImage(movies.getImage());
+        update.setLink(movies.getLink());
+        update.setShortdescription(movies.getShortdescription());
+        update.setTomato(movies.getTomato());
+        update.setTrailerlink(movies.getTrailerlink());
+        update.setViewcount(movies.getViewcount());
+
+
+        Movies updatedMovie = moviesRepository.save(update);
+        return ResponseEntity.ok(updatedMovie);
     }
 
 //    @PutMapping("/update")
@@ -81,8 +110,6 @@ public class MoviesController {
 //        List<FinalPage> mainPages = finalPageRepository.findAll();
 //        return ResponseEntity.ok(mainPages);
 //    }
-
-
 
 }
 
