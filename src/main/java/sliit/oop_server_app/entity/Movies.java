@@ -10,16 +10,16 @@ import java.util.List;
 public class Movies {
     @Id
     private String id;
-    private String categoryid;
+    private String categoryId;
     private String name;
     private String language;
     private String country;
     private String hours;
-    private String shortdescription ;
+    private String shortDescription ;
     private String description ;
     private String image;
     private String link;
-    private String trailerlink;
+    private String trailerLink;
     private double imdb;
     private double tomato;
     private int viewcount;
@@ -34,12 +34,12 @@ public class Movies {
         this.id = id;
     }
 
-    public String getCategoryid() {
-        return categoryid;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategoryid(String categoryid) {
-        this.categoryid = categoryid;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {
@@ -74,12 +74,12 @@ public class Movies {
         this.hours = hours;
     }
 
-    public String getShortdescription() {
-        return shortdescription;
+    public String getShortDescription() {
+        return shortDescription;
     }
 
-    public void setShortdescription(String shortdescription) {
-        this.shortdescription = shortdescription;
+    public void setShortDescription(String shortDescription) {
+        this.shortDescription = shortDescription;
     }
 
     public String getDescription() {
@@ -106,12 +106,12 @@ public class Movies {
         this.link = link;
     }
 
-    public String getTrailerlink() {
-        return trailerlink;
+    public String getTrailerLink() {
+        return trailerLink;
     }
 
-    public void setTrailerlink(String trailerlink) {
-        this.trailerlink = trailerlink;
+    public void setTrailerLink(String trailerLink) {
+        this.trailerLink = trailerLink;
     }
 
     public double getImdb() {

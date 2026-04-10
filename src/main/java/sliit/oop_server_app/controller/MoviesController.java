@@ -25,9 +25,6 @@ public class MoviesController {
     private MoviesRepository moviesRepository;
 
 
-
-
-
     @GetMapping(produces = "application/json")
     public List<Movies> get() {
         List<Movies> movies = this.moviesRepository.findAll();
@@ -42,6 +39,8 @@ public class MoviesController {
 //        return movies;
 //    }
 
+
+    //  Search Algorithm
     @GetMapping("/search/{query}")
     public List<Movies> searchMovies(@PathVariable String query) {
 
@@ -49,13 +48,14 @@ public class MoviesController {
         return moviesRepository.findByNameRegexIgnoreCase(regex);
     }
 
+    //  Sort Algorithm
     @GetMapping("/sort/{id}")
-    public List<Movies> getbycategory(@PathVariable String id){
-        List<Movies> movies = this.moviesRepository.getMoviesByCategoryid(id);
+    public List<Movies> getByCategory(@PathVariable String id){
+        List<Movies> movies = this.moviesRepository.getMoviesByCategoryId(id);
         return movies;
     }
 
-    @PostMapping("/save")
+    @PostMapping("/add")
     public List<Movies> saveUsers(@RequestBody List<Movies> movies) {
         if (movies.isEmpty()) {
             return Collections.emptyList();
@@ -64,15 +64,14 @@ public class MoviesController {
         return moviesRepository.saveAll(movies);
     }
 
-
+    //  Update movie
     @PutMapping("/update/{id}")
     public ResponseEntity<Movies> updateMovies(@PathVariable String id, @RequestBody Movies movies) {
         Movies update = moviesRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
 
-
         update.setName(movies.getName());
         update.setHours(movies.getHours());
-        update.setCategoryid(movies.getCategoryid());
+        update.setCategoryId(movies.getCategoryId());
         update.setCountry(movies.getCountry());
         update.setLanguage(movies.getLanguage());
         update.setImdb(movies.getImdb());
@@ -81,14 +80,23 @@ public class MoviesController {
         update.setPrice(movies.getPrice());
         update.setImage(movies.getImage());
         update.setLink(movies.getLink());
-        update.setShortdescription(movies.getShortdescription());
+        update.setShortDescription(movies.getShortDescription());
         update.setTomato(movies.getTomato());
-        update.setTrailerlink(movies.getTrailerlink());
+        update.setTrailerLink(movies.getTrailerLink());
         update.setViewcount(movies.getViewcount());
-
 
         Movies updatedMovie = moviesRepository.save(update);
         return ResponseEntity.ok(updatedMovie);
+    }
+
+    //  Delete movie
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteMovie(@PathVariable String id){
+        if (!moviesRepository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not fund");
+        }
+        moviesRepository.deleteById(id);
+        return ResponseEntity.ok("Movie deleted successfully");
     }
 
 //    @PutMapping("/update")
