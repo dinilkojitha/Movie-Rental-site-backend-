@@ -23,9 +23,7 @@ public class UsersController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
-
-
+    
 
     @GetMapping(produces = "application/json")
     public List<Users> get() {
