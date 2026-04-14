@@ -1,28 +1,26 @@
 package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity; // මේ import එක අත්‍යවශ්‍යයි!
 import org.springframework.web.bind.annotation.*;
 import sliit.oop_server_app.entity.Actors;
-import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.repository.ActorsRepository;
-import sliit.oop_server_app.repository.CategoryRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin
 @RestController
 @RequestMapping(value = "/actor")
 public class ActorController {
+
     @Autowired
     private ActorsRepository actorsRepository;
 
-
-
     @GetMapping(produces = "application/json")
     public List<Actors> get() {
-        List<Actors> actors = this.actorsRepository.findAll();
-        return actors;
+        return this.actorsRepository.findAll();
     }
 
     @PostMapping("/save")
@@ -33,33 +31,31 @@ public class ActorController {
         return actorsRepository.saveAll(actors);
     }
 
-//    @PutMapping("/update")
-//    public ResponseEntity<List<FinalPage>> updateFinalPages(@RequestBody List<FinalPage> finals) {
-//        for (FinalPage fine : finals) {
-//            Optional<FinalPage> existing = finalPageRepository.findById(fine.getId());
-//            if (existing.isPresent()) {
-//                FinalPage updated = existing.get();
-//                updated.setTitle(fine.getTitle());
-//                updated.setDescription(fine.getDescription());
-//                updated.setImage(fine.getImage());
-//                updated.setAbout_detail(fine.getAbout_detail());
-//                updated.setAbout_title(fine.getAbout_title());
-//                // Add any other fields you want to update
-//                finalPageRepository.save(updated);
-//            }
-//        }
-//        // Return the full MainPage list (or filter as needed)
-//        List<FinalPage> mainPages = finalPageRepository.findAll();
-//        return ResponseEntity.ok(mainPages);
-//    }
+    // UPDATE: Admin function
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Actors> updateActor(@PathVariable String id, @RequestBody Actors actorDetails) {
+        Optional<Actors> actor = actorsRepository.findById(id);
 
+        if (actor.isPresent()) {
+            Actors existingActor = actor.get();
+            existingActor.setName(actorDetails.getName());
+            existingActor.setImage(actorDetails.getImage());
+            existingActor.setDescription(actorDetails.getDescription());
+            return ResponseEntity.ok(actorsRepository.save(existingActor));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-
+    // DELETE: Admin function
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteActor(@PathVariable String id) {
+        if (actorsRepository.existsById(id)) {
+            actorsRepository.deleteById(id);
+            return ResponseEntity.ok("Actor deleted successfully!");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
-
-
-
-
-
-
 

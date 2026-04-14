@@ -70,10 +70,16 @@ public class UsersController {
 //        List<FinalPage> mainPages = finalPageRepository.findAll();
 //        return ResponseEntity.ok(mainPages);
 //    }
-
+            @DeleteMapping("/delete/{id}")
+            public String deleteUser(@PathVariable String id) {
+                usersRepository.deleteById(id);
+                return "User deleted successfully: " + id;
+}
 
 
 }
+
+
 
 
 
