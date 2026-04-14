@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import sliit.oop_server_app.entity.Users;
 import sliit.oop_server_app.repository.UsersRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -22,12 +23,37 @@ public class UsersController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
+    
 
     @GetMapping(produces = "application/json")
     public List<Users> get() {
         List<Users> users = this.usersRepository.findAll();
+        users.forEach(user -> {
+            user.setPassword(null);
+        });
         return users;
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUsers(@RequestBody Users user) {
+        System.out.println("Login attempt: " + user.getGmail() + " / " + user.getPassword());
+        Optional<Users> existingUser = usersRepository.findByGmail(user.getGmail());
+
+        if (existingUser.isEmpty()) {
+            System.out.println("User not found in DB");
+            return ResponseEntity.badRequest().body("User not found");
+        }
+
+        Users dbUser = existingUser.get();
+        boolean passwordMatch = passwordEncoder.matches(user.getPassword(), dbUser.getPassword());
+
+        if (!passwordMatch) {
+            System.out.println("Password mismatch");
+            return ResponseEntity.badRequest().body("Invalid password");
+        }
+
+        dbUser.setPassword(null);
+        return ResponseEntity.ok(dbUser);
     }
 
     @PostMapping("/register")
