@@ -33,6 +33,17 @@ public class RentalsController {
         return rentalsRepository.saveAll(rentals);
     }
 
+    @DeleteMapping("delete/{id}")
+    public List<Rentals> deleteRentedMovies(@PathVariable String id) {
+        if(rentalsRepository.existsById(id)){
+            rentalsRepository.deleteById(id);
+        }else  {
+            return Collections.emptyList();
+        }
+        return rentalsRepository.findAll();
+
+    }
+
 //    @PutMapping("/update")
 //    public ResponseEntity<List<FinalPage>> updateFinalPages(@RequestBody List<FinalPage> finals) {
 //        for (FinalPage fine : finals) {
