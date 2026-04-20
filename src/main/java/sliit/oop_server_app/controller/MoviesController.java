@@ -93,7 +93,7 @@ public class MoviesController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteMovie(@PathVariable String id){
         if (!moviesRepository.existsById(id)){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not fund");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
         }
         moviesRepository.deleteById(id);
         return ResponseEntity.ok("Movie deleted successfully");
