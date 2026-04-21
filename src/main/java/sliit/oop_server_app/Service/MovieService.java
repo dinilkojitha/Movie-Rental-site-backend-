@@ -7,7 +7,6 @@ import sliit.oop_server_app.DTO.MovieRequest;
 import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.DTO.MovieUpdateRequest;
 import sliit.oop_server_app.entity.Movie;
-import sliit.oop_server_app.mapper.MovieMapper;
 import sliit.oop_server_app.repository.MovieRepository;
 
 import java.util.List;
@@ -24,7 +23,25 @@ public class MovieService {
     public List<MovieResponse> getAllMovies() {
         return movieRepository.findAll()
                 .stream()
-                .map(MovieMapper::toResponse)
+                .map(movie -> {
+                    MovieResponse res = new MovieResponse();
+                    res.setName(movie.getName());
+                    res.setLanguage(movie.getLanguage());
+                    res.setCountry(movie.getCountry());
+                    res.setShortDescription(movie.getShortDescription());
+                    res.setDescription(movie.getDescription());
+                    res.setImage(movie.getImage());
+                    res.setLink(movie.getLink());
+                    res.setTrailerLink(movie.getTrailerLink());
+                    res.setCategoryId(movie.getCategoryId());
+                    res.setPrice(movie.getPrice());
+                    res.setImdb(movie.getImdb());
+                    res.setTomato(movie.getTomato());
+                    res.setViewcount(movie.getViewcount());
+                    res.setDuration(movie.getDuration());
+                    res.setActors(movie.getActors());
+                    return res;
+                })
                 .toList();
     }
 
