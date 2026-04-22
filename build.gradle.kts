@@ -33,6 +33,7 @@ dependencies {
     testCompileOnly ("org.projectlombok:lombok:1.18.30")
     compileOnly ("org.projectlombok:lombok:1.18.30")
     annotationProcessor ("org.projectlombok:lombok:1.18.30")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
 }
 
 tasks.withType<Test> {
