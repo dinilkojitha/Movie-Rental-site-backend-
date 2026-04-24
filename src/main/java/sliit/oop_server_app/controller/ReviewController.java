@@ -24,8 +24,8 @@ public class ReviewController {
     }
 
     @PostMapping("/new")
-    public List<Review> registerUsers(@RequestBody Review reviews) {
-       return (List<Review>) reviewService.add(reviews);
+    public Review registerUsers(@RequestBody Review reviews) {
+       return reviewService.add(reviews);
     }
 
     @DeleteMapping("/delete/{id}")
