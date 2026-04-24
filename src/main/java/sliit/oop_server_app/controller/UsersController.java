@@ -16,7 +16,10 @@ public class UsersController {
     @Autowired
     private UserService userService;
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
     @GetMapping(produces = "application/json")
     public List<Users> get() {
         return userService.getAllUsers();
