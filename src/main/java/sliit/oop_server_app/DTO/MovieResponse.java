@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class MovieResponse {
 
-
+    private String id;
     private String name;
     private String language;
     private String country;

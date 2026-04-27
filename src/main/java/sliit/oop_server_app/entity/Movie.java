@@ -13,7 +13,6 @@ public class Movie {
 
     @Id
     private String id;
-
     private String categoryId;
     private String name;
     private String language;
@@ -24,6 +23,7 @@ public class Movie {
     private String link;
     private String trailerLink;
     private double price;
+    private int year;
     private double imdb;
     private double tomato;
     private int viewcount;

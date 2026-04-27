@@ -9,6 +9,7 @@ import sliit.oop_server_app.DTO.MovieUpdateRequest;
 import sliit.oop_server_app.entity.Movie;
 import sliit.oop_server_app.repository.MovieRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -25,6 +26,7 @@ public class MovieService {
                 .stream()
                 .map(movie -> {
                     MovieResponse res = new MovieResponse();
+                    res.setId(movie.getId());
                     res.setName(movie.getName());
                     res.setLanguage(movie.getLanguage());
                     res.setCountry(movie.getCountry());
@@ -141,5 +143,16 @@ public class MovieService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
         }
         movieRepository.deleteById(id);
+    }
+
+
+    public List<Movie> filterByYears(String year) {
+        // Check if the year exists
+        if (movieRepository.existsByYear(year)) {
+            // Just call the method directly; no need to cast or redeclare the type
+            return movieRepository.findAllByYear(year);
+        }
+        // Returning an empty list is safer than returning null
+        return Collections.emptyList();
     }
 }

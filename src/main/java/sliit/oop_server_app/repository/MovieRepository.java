@@ -10,4 +10,7 @@ import java.util.List;
 public interface MovieRepository extends MongoRepository<Movie, String>{
 
     List<Movie> findByNameContainingIgnoreCase(String name);
+
+    List<Movie> findAllByYear(String year);
+    boolean existsByYear(String year);
 }

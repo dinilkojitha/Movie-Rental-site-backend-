@@ -1,8 +1,12 @@
 package sliit.oop_server_app.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@Setter
+@Getter
 @Document(collection = "category")
 public class Category {
     @Id
@@ -10,29 +14,7 @@ public class Category {
     private String name;
     private String img;
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImg() {
-        return img;
-    }
-
-    public void setImg(String img) {
-        this.img = img;
-    }
 
 
 
