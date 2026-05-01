@@ -14,7 +14,7 @@ public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
-    private int id;
+    private Integer id;
 
     @Size(max = 45)
     @Column(name = "hedder", length = 45)
@@ -25,10 +25,10 @@ public class Rating {
     private String body;
 
     @Column(name = "likes")
-    private int likes;
+    private Integer likes;
 
     @Column(name = "dislikes")
-    private int dislikes;
+    private Integer dislikes;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

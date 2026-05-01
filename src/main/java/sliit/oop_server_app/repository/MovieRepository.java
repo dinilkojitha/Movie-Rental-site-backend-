@@ -11,6 +11,6 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
 
     List<Movie> findByNameContainingIgnoreCase(String name);
 
-    List<Movie> findAllByYear(String year);
-    boolean existsByYear(String year);
+//    List<Movie> findAllByYear(String year);
+//    boolean existsByYear(String year);
 }

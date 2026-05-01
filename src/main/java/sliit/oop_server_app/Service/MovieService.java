@@ -3,9 +3,7 @@ package sliit.oop_server_app.Service;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sliit.oop_server_app.DTO.MovieRequest;
 import sliit.oop_server_app.DTO.MovieResponse;
-import sliit.oop_server_app.DTO.MovieUpdateRequest;
 import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.entity.Movie;
 import sliit.oop_server_app.repository.CategoryRepository;
@@ -14,7 +12,6 @@ import sliit.oop_server_app.repository.MovieRepository;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class MovieService {
@@ -141,13 +138,13 @@ public class MovieService {
     }
 
 
-    public List<Movie> filterByYears(String year) {
-        // Check if the year exists
-        if (movieRepository.existsByYear(year)) {
-            // Just call the method directly; no need to cast or redeclare the type
-            return movieRepository.findAllByYear(year);
-        }
-        // Returning an empty list is safer than returning null
-        return Collections.emptyList();
-    }
+//    public List<Movie> filterByYears(String year) {
+//        // Check if the year exists
+//        if (movieRepository.existsByYear(year)) {
+//            // Just call the method directly; no need to cast or redeclare the type
+//            return movieRepository.findAllByYear(year);
+//        }
+//        // Returning an empty list is safer than returning null
+//        return Collections.emptyList();
+//    }
 }

@@ -3,7 +3,6 @@ package sliit.oop_server_app.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sliit.oop_server_app.DTO.MovieRequest;
 import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.Service.MovieService;
 import sliit.oop_server_app.entity.Movie;
@@ -50,8 +49,8 @@ public class MovieController {
         return ResponseEntity.ok("Movie deleted successfully");
     }
 
-    @GetMapping("/years/{Year}")
-    public List<?> movielist (@PathVariable String Year){
-        return movieService.filterByYears(Year);
-    }
+//    @GetMapping("/years/{Year}")
+//    public List<?> movielist (@PathVariable String Year){
+//        return movieService.filterByYears(Year);
+//    }
 }
