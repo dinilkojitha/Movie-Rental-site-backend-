@@ -2,7 +2,6 @@ package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sliit.oop_server_app.entity.Rentals;
 import sliit.oop_server_app.repository.RentalsRepository;
 
 import java.util.Collections;

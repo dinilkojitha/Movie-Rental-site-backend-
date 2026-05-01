@@ -8,8 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "category")
-public class Category {
+@Table(name = "actors")
+public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -20,7 +20,11 @@ public class Category {
     private String name;
 
     @Lob
-    @Column(name = "img")
-    private String img;
+    @Column(name = "image")
+    private String image;
+
+    @Size(max = 45)
+    @Column(name = "description", length = 45)
+    private String description;
 
 }

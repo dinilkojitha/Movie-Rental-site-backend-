@@ -1,13 +1,13 @@
 package sliit.oop_server_app.repository;
 
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import sliit.oop_server_app.entity.Users;
+import sliit.oop_server_app.entity.User;
 
 import java.util.Optional;
 
 @Repository
-public interface UsersRepository extends MongoRepository<Users, String>{
+public interface UsersRepository extends JpaRepository<User, Integer> {
     boolean existsByGmail(String gmail);
-    Optional<Users> findByGmail(String gmail);
+    Optional<User> findByGmail(String gmail);
 }

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
-import sliit.oop_server_app.entity.Actors;
 
 import java.util.List;
 
@@ -42,7 +41,7 @@ public class MovieRequest {
     private String link;
     private String trailerLink;
     private String categoryId;
-    private List<Actors> actors;
+    private List<Actor> actors;
 
 
 }

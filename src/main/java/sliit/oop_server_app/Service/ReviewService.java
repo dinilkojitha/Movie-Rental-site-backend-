@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import sliit.oop_server_app.entity.Review;
-import sliit.oop_server_app.repository.ReviewRepository;
 
 import java.util.List;
 

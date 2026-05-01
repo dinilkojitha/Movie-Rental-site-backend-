@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sliit.oop_server_app.DTO.MovieRequest;
 import sliit.oop_server_app.DTO.MovieResponse;
-import sliit.oop_server_app.DTO.MovieUpdateRequest;
 import sliit.oop_server_app.Service.MovieService;
 import sliit.oop_server_app.entity.Movie;
 
@@ -33,20 +32,20 @@ public class MovieController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MovieResponse> create(@Valid @RequestBody MovieRequest request){
+    public ResponseEntity<MovieResponse> create(@Valid @RequestBody Movie request){
         return ResponseEntity.ok(movieService.createMovie(request));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<MovieResponse> update(
-            @PathVariable String id,
-            @RequestBody MovieUpdateRequest request){
+    public ResponseEntity<Movie> update(
+            @PathVariable int id,
+            @RequestBody Movie request){
 
         return ResponseEntity.ok(movieService.updateMovie(id, request));
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable String id){
+    public ResponseEntity<String> delete(@PathVariable int id){
         movieService.deleteMovie(id);
         return ResponseEntity.ok("Movie deleted successfully");
     }

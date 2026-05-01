@@ -34,6 +34,12 @@ dependencies {
     compileOnly ("org.projectlombok:lombok:1.18.30")
     annotationProcessor ("org.projectlombok:lombok:1.18.30")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
+    // Spring Data JPA for database operations
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    // MySQL Connector (The actual driver)
+    // Spring Boot manages the version for you, so no version tag is needed!
+    runtimeOnly("com.mysql:mysql-connector-j")
 }
 
 tasks.withType<Test> {

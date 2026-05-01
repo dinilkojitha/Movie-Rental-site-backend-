@@ -1,12 +1,8 @@
 package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sliit.oop_server_app.Service.ReviewService;
-import sliit.oop_server_app.Service.UserService;
-import sliit.oop_server_app.entity.Review;
-import sliit.oop_server_app.entity.Users;
 
 import java.util.List;
 

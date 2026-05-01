@@ -3,7 +3,6 @@ package sliit.oop_server_app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.repository.CategoryRepository;
 
 import java.util.List;

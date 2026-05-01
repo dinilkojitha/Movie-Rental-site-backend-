@@ -3,7 +3,6 @@ package sliit.oop_server_app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity; // මේ import එක අත්‍යවශ්‍යයි!
 import org.springframework.web.bind.annotation.*;
-import sliit.oop_server_app.entity.Actors;
 import sliit.oop_server_app.repository.ActorsRepository;
 
 import java.util.Collections;

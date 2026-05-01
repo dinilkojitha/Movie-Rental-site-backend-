@@ -4,47 +4,48 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sliit.oop_server_app.Service.UserService;
-import sliit.oop_server_app.entity.Users;
+import sliit.oop_server_app.Service.Userervice;
+import sliit.oop_server_app.entity.User;
 
 import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping(value = "/users")
-public class UsersController {
+@RequestMapping(value = "/User")
+public class UserController {
 
     @Autowired
     private UserService userService;
 
     @GetMapping(produces = "application/json")
-    public List<Users> get() {
-        return userService.getAllUsers();
+    public List<User> get() {
+        return userService.getAllUser();
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUsers(@RequestBody Users user) {
+    public ResponseEntity<?> loginUser(@RequestBody User user) {
         return userService.login(user);
     }
 
     @PostMapping("/register")
-    public List<Users> registerUsers(@RequestBody List<Users> users) {
-        return userService.register(users);
+    public List<User> registerUser(@RequestBody List<User> User) {
+        return userService.register(User);
     }
 
     @DeleteMapping("/delete/{id}")
-    public String deleteUser(@PathVariable String id) {
+    public String deleteUser(@PathVariable int id) {
         return userService.delete(id);
     }
 
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Users user) {
+    public ResponseEntity<?> update(@PathVariable int id, @RequestBody User user) {
         return userService.updateUser(id, user);
     }
 
     @GetMapping("/sort")
-    public List<Users> sort() {
-        return userService.sortUsers();
+    public List<User> sort() {
+        return userService.sortUser();
     }
 
     @GetMapping("/search/{gmail}")
