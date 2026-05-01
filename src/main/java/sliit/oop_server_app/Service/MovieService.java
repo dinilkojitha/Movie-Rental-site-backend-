@@ -9,7 +9,6 @@ import sliit.oop_server_app.entity.Movie;
 import sliit.oop_server_app.repository.CategoryRepository;
 import sliit.oop_server_app.repository.MovieRepository;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class MovieService {
                     res.setImdb(movie.getImdb());
                     res.setTomato(movie.getTomato());
                     res.setViewcount(movie.getViewcount());
-                    res.setHours(Date.from(movie.getHours()));
+                    res.setHours(movie.getHours());
                     return res;
                 })
                 .toList();

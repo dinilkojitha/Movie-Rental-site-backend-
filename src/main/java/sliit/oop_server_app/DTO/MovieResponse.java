@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import sliit.oop_server_app.entity.Actor;
 
+import java.time.Instant;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class MovieResponse {
     private double imdb;
     private double tomato;
     private int viewcount;
-    private Date Hours;
+    private Instant Hours;
     private List<Actor> actors;
 
 
