@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import sliit.oop_server_app.Service.UserService;
-import sliit.oop_server_app.Service.Userervice;
 import sliit.oop_server_app.entity.User;
 
 import java.util.List;
