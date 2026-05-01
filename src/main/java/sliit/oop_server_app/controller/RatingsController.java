@@ -2,6 +2,7 @@ package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.entity.Rating;
 import sliit.oop_server_app.repository.RatingsRepository;
 
 import java.util.Collections;
@@ -18,13 +19,13 @@ public class RatingsController {
 
 
     @GetMapping(produces = "application/json")
-    public List<Ratings> get() {
-        List<Ratings> ratings = this.ratingsRepository.findAll();
+    public List<Rating> get() {
+        List<Rating> ratings = this.ratingsRepository.findAll();
         return ratings;
     }
 
     @PostMapping("/save")
-    public List<Ratings> saveUsers(@RequestBody List<Ratings> ratings) {
+    public List<Rating> saveUsers(@RequestBody List<Rating> ratings) {
         if (ratings.isEmpty()) {
             return Collections.emptyList();
         }

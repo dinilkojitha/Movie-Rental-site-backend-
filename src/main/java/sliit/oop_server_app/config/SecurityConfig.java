@@ -11,9 +11,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // API වලට CSRF ඕනේ නැහැ
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll() // දැනට හැම Request එකකටම (Movies, Users ඔක්කොටම) අවසර දෙනවා
+                        .anyRequest().permitAll()
                 );
         return http.build();
     }

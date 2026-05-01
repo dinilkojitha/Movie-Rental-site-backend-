@@ -1,8 +1,9 @@
 package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity; // මේ import එක අත්‍යවශ්‍යයි!
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.entity.Actor;
 import sliit.oop_server_app.repository.ActorsRepository;
 
 import java.util.Collections;
@@ -18,12 +19,12 @@ public class ActorController {
     private ActorsRepository actorsRepository;
 
     @GetMapping(produces = "application/json")
-    public List<Actors> get() {
+    public List<Actor> get() {
         return this.actorsRepository.findAll();
     }
 
     @PostMapping("/save")
-    public List<Actors> saveUsers(@RequestBody List<Actors> actors) {
+    public List<Actor> saveUsers(@RequestBody List<Actor> actors) {
         if (actors.isEmpty()) {
             return Collections.emptyList();
         }
@@ -32,11 +33,11 @@ public class ActorController {
 
     // UPDATE: Admin function
     @PutMapping("/update/{id}")
-    public ResponseEntity<Actors> updateActor(@PathVariable String id, @RequestBody Actors actorDetails) {
-        Optional<Actors> actor = actorsRepository.findById(id);
+    public ResponseEntity<Actor> updateActor(@PathVariable int id, @RequestBody Actor actorDetails) {
+        Optional<Actor> actor = actorsRepository.findById(id);
 
         if (actor.isPresent()) {
-            Actors existingActor = actor.get();
+            Actor existingActor = actor.get();
             existingActor.setName(actorDetails.getName());
             existingActor.setImage(actorDetails.getImage());
             existingActor.setDescription(actorDetails.getDescription());
@@ -48,7 +49,7 @@ public class ActorController {
 
     // DELETE: Admin function
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteActor(@PathVariable String id) {
+    public ResponseEntity<String> deleteActor(@PathVariable int id) {
         if (actorsRepository.existsById(id)) {
             actorsRepository.deleteById(id);
             return ResponseEntity.ok("Actor deleted successfully!");

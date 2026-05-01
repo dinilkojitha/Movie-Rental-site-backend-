@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sliit.oop_server_app.entity.Rating;
+import sliit.oop_server_app.repository.RatingsRepository;
 
 import java.util.List;
 
@@ -11,28 +13,27 @@ import java.util.List;
 public class ReviewService {
 
     @Autowired
-    private ReviewRepository reviewRepository;
+    private RatingsRepository reviewRepository;
 
     // REMOVED: The self-referencing constructor and field that caused the crash.
 
-    public List<Review> getAll() {
+    public List<Rating> getAll() {
         // Simplified: Return the list directly from the database
         return reviewRepository.findAll();
     }
 
-    public Review add(Review data) {
+    public Rating add(Rating data) {
         // You can save the 'data' object directly if it matches the Entity structure
         // Or keep the manual mapping if you want to ensure specific fields are set
-        Review review = new Review();
-        review.setName(data.getName());
-        review.setBody(data.getBody());
-        review.setMoviename(data.getMoviename());
-        review.setMovieid(data.getMovieid());
+        Rating rating = new Rating();
+        rating.setUsers(data.getUsers());
+        rating.setBody(data.getBody());
+        rating.setMovies(data.getMovies());
 
-        return reviewRepository.save(review);
+        return reviewRepository.save(rating);
     }
 
-    public String delete(String id) {
+    public int delete(int id) {
         if (!reviewRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found");
         }

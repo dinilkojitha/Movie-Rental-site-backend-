@@ -3,6 +3,7 @@ package sliit.oop_server_app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.repository.CategoryRepository;
 
 import java.util.List;
@@ -37,7 +38,7 @@ public class CategoryController {
 
     // UPDATE: Admin function
     @PutMapping("/update/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable String id, @RequestBody Category categoryDetails) {
+    public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody Category categoryDetails) {
         Optional<Category> category = categoryRepository.findById(id);
 
         if (category.isPresent()) {
@@ -52,7 +53,7 @@ public class CategoryController {
 
     // DELETE: Admin function
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable String id) {
+    public ResponseEntity<String> deleteCategory(@PathVariable int id) {
         if (categoryRepository.existsById(id)) {
             categoryRepository.deleteById(id);
             return ResponseEntity.ok("Category deleted successfully!");

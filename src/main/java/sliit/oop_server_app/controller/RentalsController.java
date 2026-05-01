@@ -2,6 +2,7 @@ package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.entity.Rental;
 import sliit.oop_server_app.repository.RentalsRepository;
 
 import java.util.Collections;
@@ -18,13 +19,13 @@ public class RentalsController {
 
 
     @GetMapping(produces = "application/json")
-    public List<Rentals> get() {
-        List<Rentals> rentals = this.rentalsRepository.findAll();
+    public List<Rental> get() {
+        List<Rental> rentals = this.rentalsRepository.findAll();
         return rentals;
     }
 
     @PostMapping("/save")
-    public List<Rentals> saveUsers(@RequestBody List<Rentals> rentals) {
+    public List<Rental> saveUsers(@RequestBody List<Rental> rentals) {
         if (rentals.isEmpty()) {
             return Collections.emptyList();
         }
@@ -33,7 +34,7 @@ public class RentalsController {
     }
 
     @DeleteMapping("delete/{id}")
-    public List<Rentals> deleteRentedMovies(@PathVariable String id) {
+    public List<Rental> deleteRentedMovies(@PathVariable int id) {
         if(rentalsRepository.existsById(id)){
             rentalsRepository.deleteById(id);
         }else  {
