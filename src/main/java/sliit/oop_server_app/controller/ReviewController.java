@@ -21,11 +21,6 @@ public class ReviewController {
        return reviewService.getAll();
     }
 
-    @GetMapping("{id}")
-    public List<Review> get(@PathVariable int id) {
-        return reviewService.getbyMovieId(id);
-    }
-
     @PostMapping("/save")
     public Review saveUsers(@RequestBody Review reviews) {
         return reviewService.add(reviews);
@@ -36,13 +31,13 @@ public class ReviewController {
         return reviewService.update(reviews , reviews.getId());
     }
 
-    @PutMapping("/like/{id}")
-    public Review like(@PathVariable int id) {
+    @PutMapping("/like")
+    public Review like(@RequestBody int id) {
         return reviewService.like(id);
     }
 
-    @PutMapping("/unlike/{id}")
-    public Review unlike(@PathVariable int id) {
+    @PutMapping("/unlike")
+    public Review unlike(@RequestBody int id) {
         return reviewService.dislike(id);
     }
 

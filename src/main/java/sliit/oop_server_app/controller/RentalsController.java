@@ -24,11 +24,6 @@ public class RentalsController {
       return rentalService.getAll();
     }
 
-    @GetMapping("{id}")
-    public List<Rental> get(@PathVariable int id) {
-        return rentalService.getByUser(id);
-    }
-
     @PostMapping("/save")
     public Rental saveUsers(@RequestBody Rental rentals) {
       return rentalService.addnew(rentals);

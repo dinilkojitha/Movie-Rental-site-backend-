@@ -37,7 +37,6 @@ public class UserController {
     }
 
 
-
     @PutMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable int id, @RequestBody User user) {
         return userService.updateUser(id, user);
@@ -47,8 +46,6 @@ public class UserController {
     public List<User> sort() {
         return userService.sortUser();
     }
-
-
 
     @GetMapping("/search/{gmail}")
     public ResponseEntity<?> search(@PathVariable String gmail) {

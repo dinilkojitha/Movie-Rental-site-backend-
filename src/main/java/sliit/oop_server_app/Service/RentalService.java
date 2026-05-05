@@ -26,10 +26,6 @@ public class RentalService {
         }).toList();
     }
 
-    public List<Rental> getByUser(int id) {
-        return rentalsRepository.findByUsers_Id(id);
-    }
-
     public Rental addnew(Rental data) {
         return rentalsRepository.save(data);
     }
