@@ -20,14 +20,12 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
+    public List<Review> getbyMovieId(int id) {
+        return reviewRepository.findByMovies_Id(id);
+    }
+
     public Review add(Review data) {
-        Review rating = new Review();
-        rating.setUsers(data.getUsers());
-        rating.setBody(data.getBody());
-        rating.setMovies(data.getMovies());
-
-
-        return reviewRepository.save(rating);
+        return reviewRepository.save(data);
     }
 
     public Review update(Review data, int id) {

@@ -7,12 +7,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.entity.Category;
+import sliit.oop_server_app.entity.CategoryHasMovie;
 import sliit.oop_server_app.entity.Movie;
-import sliit.oop_server_app.repository.Actors_has_moviesRepository;
-import sliit.oop_server_app.repository.CategoryRepository;
-import sliit.oop_server_app.repository.MovieRepository;
+import sliit.oop_server_app.repository.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MovieService {
@@ -22,13 +23,35 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final CategoryRepository categoryRepository;
 
+    @Autowired
+    private CategoryHasMovieRepository categoryHasMovieRepository;
+
+    @Autowired
+    private ActorsRepository actorsRepository;
+
+    @Autowired
+    private ReviewRepository reviewRepository;
+
     public MovieService(MovieRepository movieRepository, CategoryRepository categoryRepository) {
         this.movieRepository = movieRepository;
         this.categoryRepository = categoryRepository;
     }
 
     public List<Movie> getAllMovies() {
-        return movieRepository.findAll();
+        List<Movie> movies = movieRepository.findAllWithCategories();
+
+        // Populate the transient categories field
+        for (Movie movie : movies) {
+            if (movie.getCategoryHasMovies() != null) {
+                movie.setCategories(
+                        movie.getCategoryHasMovies().stream()
+                                .map(CategoryHasMovie::getCategory)
+                                .toList()
+                );
+            }
+        }
+
+        return movies;
     }
 
     public List<MovieResponse> searchMovies(String query) {
@@ -63,20 +86,14 @@ public class MovieService {
         data.setViewcount(request.getViewcount());
         data.setPrice(request.getPrice());
 
-        // Handle the Category association if it's being updated
-        if (request.getCategory() != null) {
-            data.setCategory(request.getCategory());
-        }
 
         // 3. Save and return the updated entity
         return movieRepository.save(data);
     }
 
-    public MovieResponse createMovie(Movie request) {
-        // 1. Create a new Movie entity instance
+    public MovieResponse createMovie(Movie request, List<Integer> categoryIds) {
+        // 1. Map and Save the new Movie
         Movie movie = new Movie();
-
-        // 2. Map Request data to the Entity
         movie.setName(request.getName());
         movie.setLanguage(request.getLanguage());
         movie.setCountry(request.getCountry());
@@ -89,20 +106,29 @@ public class MovieService {
         movie.setImdb(request.getImdb());
         movie.setTomato(request.getTomato());
         movie.setPrice(request.getPrice());
-        movie.setViewcount(0); // Initialize view count for new movies
+        movie.setViewcount(0);
 
-        // 3. Handle Category (Fetch from DB to ensure it exists)
-        Category category = categoryRepository.findById(request.getCategory().getId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-        movie.setCategory(category);
-
-        // 4. Save the entity
+        // Save movie first to generate the ID
         Movie savedMovie = movieRepository.save(movie);
 
+        // 2. Loop through the List of Category IDs
+        if (categoryIds != null && !categoryIds.isEmpty()) {
+            for (Integer catId : categoryIds) {
+                // Find category by ID (safe check)
+                categoryRepository.findById(catId).ifPresent(category -> {
+                    // Create the join entity entry
+                    CategoryHasMovie mapping = new CategoryHasMovie();
+                    mapping.setMovies(savedMovie);
+                    mapping.setCategory(category);
+
+                    // Save the mapping to the join table repository
+                    categoryHasMovieRepository.save(mapping);
+                });
+            }
+        }
 
         return mapToResponse(savedMovie);
     }
-
     // Helper method to convert Entity -> Response
     private MovieResponse mapToResponse(Movie movie) {
         MovieResponse response = new MovieResponse();
@@ -112,16 +138,27 @@ public class MovieService {
         return response;
     }
 
+
+    public void updatecount(Integer id) {
+        movieRepository.findById(id).ifPresent(movie -> {
+            // Handle null viewcount safety
+            int currentCount = (movie.getViewcount() == null) ? 0 : movie.getViewcount();
+            movie.setViewcount(currentCount + 1);
+
+            movieRepository.save(movie);
+        });
+    }
+
     @Transactional
-    public void deleteMovie(int id) {
-        if (!movieRepository.existsById(id)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found");
-        }
+    public void deletemovie(Integer id) {
+        // 1. Delete all associations in the join table first
+        categoryHasMovieRepository.deleteByMovies_id(id);
 
-        // First, clear the bridge table associations
-        actors_has_moviesRepository.deleteAllByMoviesId(id);
+        reviewRepository.deleteByMovies_id(id);
+        // 2. If you have an actors join table, delete that too
+        // actorHasMovieRepository.deleteByMovies_id(id);
 
-        // Now, delete the actual movie
+        // 3. Now it's safe to delete the movie
         movieRepository.deleteById(id);
     }
 
