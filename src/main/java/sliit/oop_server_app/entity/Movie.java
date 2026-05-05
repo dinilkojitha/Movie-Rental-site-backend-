@@ -1,12 +1,12 @@
 package sliit.oop_server_app.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -18,8 +18,8 @@ public class Movie {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Size(max = 45)
-    @Column(name = "name", length = 45)
+    @Size(max = 100)
+    @Column(name = "name", length = 100)
     private String name;
 
     @Size(max = 45)
@@ -31,26 +31,26 @@ public class Movie {
     private String country;
 
     @Column(name = "hours")
-    private Instant hours;
+    private Double hours;
 
-    @Size(max = 45)
-    @Column(name = "shortdescription", length = 45)
+    @Size(max = 255)
+    @Column(name = "shortdescription")
     private String shortdescription;
 
-    @Size(max = 45)
-    @Column(name = "description", length = 45)
+    @Size(max = 1500)
+    @Column(name = "description", length = 1500)
     private String description;
 
     @Lob
     @Column(name = "image")
     private String image;
 
-    @Size(max = 45)
-    @Column(name = "link", length = 45)
+    @Size(max = 255)
+    @Column(name = "link")
     private String link;
 
-    @Size(max = 45)
-    @Column(name = "trailerlink", length = 45)
+    @Size(max = 255)
+    @Column(name = "trailerlink")
     private String trailerlink;
 
     @Column(name = "imdb")
@@ -62,12 +62,20 @@ public class Movie {
     @Column(name = "viewcount")
     private Integer viewcount;
 
+    @Column(name = "year")
+    private Integer year;
+
     @Column(name = "price")
     private Double price;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "category_id", nullable = false)
-    private Category category;
+    @Column(name = "ratings")
+    private Integer ratings;
+
+    @OneToMany(mappedBy = "movies", fetch = FetchType.LAZY)
+    private List<CategoryHasMovie> categoryHasMovies;
+    // Inside Movie.java
+    @Transient
+    private List<Category> categories;
+
 
 }

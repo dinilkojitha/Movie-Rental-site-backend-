@@ -1,17 +1,16 @@
 package sliit.oop_server_app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
 @Entity
-@Table(name = "rentals")
-public class Rental {
+@Table(name = "category_has_movies")
+public class CategoryHasMovie {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -19,15 +18,13 @@ public class Rental {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "users_id", nullable = false)
-    private User users;
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
 
+    @JsonIgnore
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "movies_id", nullable = false)
     private Movie movies;
-
-    @Column(name = "date")
-    private LocalDate date;
 
 }

@@ -21,9 +21,9 @@ public class User {
     @Column(name = "name", nullable = false, length = 45)
     private String name;
 
-    @Size(max = 45)
+    @Size(max = 255)
     @NotNull
-    @Column(name = "password", nullable = false, length = 45)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Size(max = 45)

@@ -5,7 +5,6 @@ import lombok.Setter;
 import sliit.oop_server_app.entity.Actor;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 
 @Getter

@@ -21,7 +21,7 @@ public class MovieController {
     }
 
     @GetMapping("/all")
-    public List<MovieResponse> getAll() {
+    public List<Movie> getAll() {
         return movieService.getAllMovies();
     }
 
@@ -31,8 +31,8 @@ public class MovieController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MovieResponse> create(@Valid @RequestBody Movie request){
-        return ResponseEntity.ok(movieService.createMovie(request));
+    public MovieResponse addMovie(@RequestBody Movie request, @RequestParam List<Integer> categoryIds) {
+        return movieService.createMovie(request, categoryIds);
     }
 
     @PutMapping("/update/{id}")
@@ -43,9 +43,15 @@ public class MovieController {
         return ResponseEntity.ok(movieService.updateMovie(id, request));
     }
 
+    @PutMapping("/update/count/{id}")
+    public String updateCount(@PathVariable int id){
+        movieService.updatecount(id);
+        return "success";
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> delete(@PathVariable int id){
-        movieService.deleteMovie(id);
+        movieService.deletemovie(id);
         return ResponseEntity.ok("Movie deleted successfully");
     }
 

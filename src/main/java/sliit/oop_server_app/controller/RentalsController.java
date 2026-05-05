@@ -2,6 +2,7 @@ package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.Service.RentalService;
 import sliit.oop_server_app.entity.Rental;
 import sliit.oop_server_app.repository.RentalsRepository;
 
@@ -13,36 +14,38 @@ import java.util.List;
 @RequestMapping(value = "/rentals")
 public class RentalsController {
     @Autowired
-    private RentalsRepository rentalsRepository;
+    private RentalService rentalService;
 
 
 
 
     @GetMapping(produces = "application/json")
     public List<Rental> get() {
-        List<Rental> rentals = this.rentalsRepository.findAll();
-        return rentals;
+      return rentalService.getAll();
+    }
+
+    @GetMapping("{id}")
+    public List<Rental> get(@PathVariable int id) {
+        return rentalService.getByUser(id);
     }
 
     @PostMapping("/save")
-    public List<Rental> saveUsers(@RequestBody List<Rental> rentals) {
-        if (rentals.isEmpty()) {
-            return Collections.emptyList();
-        }
-        System.out.print(rentals);
-        return rentalsRepository.saveAll(rentals);
+    public Rental saveUsers(@RequestBody Rental rentals) {
+      return rentalService.addnew(rentals);
     }
 
-    @DeleteMapping("delete/{id}")
-    public List<Rental> deleteRentedMovies(@PathVariable int id) {
-        if(rentalsRepository.existsById(id)){
-            rentalsRepository.deleteById(id);
-        }else  {
-            return Collections.emptyList();
-        }
-        return rentalsRepository.findAll();
+//    @DeleteMapping("delete/{id}")
+//    public List<Rental> deleteRentedMovies(@PathVariable int id) {
+//        if(rentalsRepository.existsById(id)){
+//            rentalsRepository.deleteById(id);
+//        }else  {
+//            return Collections.emptyList();
+//        }
+//        return rentalsRepository.findAll();
+//
+//    }
 
-    }
+
 
 //    @PutMapping("/update")
 //    public ResponseEntity<List<FinalPage>> updateFinalPages(@RequestBody List<FinalPage> finals) {

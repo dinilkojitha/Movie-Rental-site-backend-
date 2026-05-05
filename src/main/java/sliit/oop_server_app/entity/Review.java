@@ -2,23 +2,20 @@ package sliit.oop_server_app.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "ratings")
-public class Rating {
+@Table(name = "review")
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Integer id;
-
-    @Size(max = 45)
-    @Column(name = "hedder", length = 45)
-    private String hedder;
 
     @Lob
     @Column(name = "body")
@@ -39,5 +36,8 @@ public class Rating {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "movies_id", nullable = false)
     private Movie movies;
+
+    @Column(name = "date")
+    private LocalDate date;
 
 }
