@@ -37,22 +37,89 @@ public class MovieService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Movie> getAllMovies() {
-        List<Movie> movies = movieRepository.findAllWithCategories();
+//    public List<MovieResponse> getAllMovies() {
+//        List<Movie> movies = movieRepository.findAllWithCategories();
+//        List<MovieResponse> movieResponseList = new ArrayList<>();
+//        movies.forEach(movie -> {
+//            MovieResponse movieResponse = new MovieResponse();
+//            movieResponse.setId(movie.getId());
+//            movieResponse.setName(movie.getName());
+//            movieResponse.setLanguage(movie.getLanguage());
+//            movieResponse.setCountry(movie.getCountry());
+//            movieResponse.setHours(movie.getHours());
+//            movieResponse.setShortDescription(movie.getShortdescription());
+//            movieResponse.setDescription(movie.getDescription());
+//            movieResponse.setImage(movie.getImage());
+//            movieResponse.setLink(movie.getLink());
+//            movieResponse.setTrailerLink(movie.getTrailerlink());
+//            movieResponse.setImdb(movie.getImdb());
+//            movieResponse.setTomato(movie.getTomato());
+//            movieResponse.setViewcount(movie.getViewcount());
+//            movieResponse.setYear(movie.getYear());
+//            movieResponse.setPrice(movie.getPrice());
+//            movieResponse.setRatings(movie.getRatings());
+//
+//            List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
+//            List<Category> cat = new ArrayList<>(List.of());
+//            categoryHasMovies.forEach(categoryHasMovie -> {
+//                cat.add(categoryHasMovie.getCategory());
+//            });
+//
+//            movieResponse.setCategoryId(cat);
+//
+//           movieResponseList.add(movieResponse);
+//
+//        });
+//
+//        return movieResponseList;
+//
+//    }
 
-        // Populate the transient categories field
-        for (Movie movie : movies) {
-            if (movie.getCategoryHasMovies() != null) {
-                movie.setCategories(
-                        movie.getCategoryHasMovies().stream()
-                                .map(CategoryHasMovie::getCategory)
-                                .toList()
-                );
-            }
-        }
 
-        return movies;
+    @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
+    public List<MovieResponse> getAllMovies() {
+        // 1. Use the standard findAll() method
+        List<Movie> movies = movieRepository.findAll();
+        List<MovieResponse> movieResponseList = new ArrayList<>();
+
+        movies.forEach(movie -> {
+            MovieResponse movieResponse = new MovieResponse();
+
+            // Mapping basic fields
+            movieResponse.setId(movie.getId());
+            movieResponse.setName(movie.getName());
+            movieResponse.setLanguage(movie.getLanguage());
+            movieResponse.setCountry(movie.getCountry());
+            movieResponse.setHours(movie.getHours());
+            movieResponse.setShortDescription(movie.getShortdescription());
+            movieResponse.setDescription(movie.getDescription());
+            movieResponse.setImage(movie.getImage());
+            movieResponse.setLink(movie.getLink());
+            movieResponse.setTrailerLink(movie.getTrailerlink());
+            movieResponse.setImdb(movie.getImdb());
+            movieResponse.setTomato(movie.getTomato());
+            movieResponse.setViewcount(movie.getViewcount());
+            movieResponse.setYear(movie.getYear());
+            movieResponse.setPrice(movie.getPrice());
+            movieResponse.setRatings(movie.getRatings());
+
+            // 2. Your specific mechanism: Fetching via the Join Repository
+            List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
+            List<Category> cat = new ArrayList<>();
+
+            categoryHasMovies.forEach(categoryHasMovie -> {
+                cat.add(categoryHasMovie.getCategory());
+            });
+
+            movieResponse.setCategoryId(cat);
+            movieResponseList.add(movieResponse);
+        });
+
+        return movieResponseList;
     }
+
+
+
 
     public List<MovieResponse> searchMovies(String query) {
         return movieRepository.findByNameContainingIgnoreCase(query)

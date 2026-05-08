@@ -2,6 +2,7 @@ package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.DTO.ReviewListResponse;
 import sliit.oop_server_app.Service.ReviewService;
 import sliit.oop_server_app.entity.Review;
 import sliit.oop_server_app.repository.ReviewRepository;
@@ -17,7 +18,7 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @GetMapping(produces = "application/json")
-    public List<Review> get() {
+    public List<ReviewListResponse> get() {
        return reviewService.getAll();
     }
 

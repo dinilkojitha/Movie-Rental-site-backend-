@@ -22,9 +22,6 @@ public class CategoryController {
         return categoryRepository.findAll();
     }
 
-
-
-
     @PostMapping("/save")
     public List<Category> saveUsers(@RequestBody List<Category> categories) {
         if (categories.isEmpty()) {
@@ -35,7 +32,6 @@ public class CategoryController {
 //        System.out.print(categories);
         return categoryRepository.saveAll(categories);
     }
-
     // UPDATE: Admin function
     @PutMapping("/update/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody Category categoryDetails) {
@@ -50,7 +46,6 @@ public class CategoryController {
             return ResponseEntity.notFound().build();
         }
     }
-
     // DELETE: Admin function
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable int id) {

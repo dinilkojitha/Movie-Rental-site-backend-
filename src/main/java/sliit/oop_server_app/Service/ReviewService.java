@@ -4,9 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sliit.oop_server_app.DTO.ReviewListResponse;
+import sliit.oop_server_app.entity.Category;
+import sliit.oop_server_app.entity.CategoryHasMovie;
 import sliit.oop_server_app.entity.Review;
+import sliit.oop_server_app.repository.CategoryHasMovieRepository;
 import sliit.oop_server_app.repository.ReviewRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +21,32 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public List<Review> getAll() {
-        return reviewRepository.findAll();
+    @Autowired
+    private CategoryHasMovieRepository categoryHasMovieRepository;
+
+    public List<ReviewListResponse> getAll() {
+
+        List<Review> reviews =  reviewRepository.findAll();
+        List<ReviewListResponse> reviewListResponses = new ArrayList<>();
+        for (Review review : reviews) {
+            ReviewListResponse reviewListResponse = new ReviewListResponse();
+            reviewListResponse.setId(review.getId());
+            reviewListResponse.setBody(review.getBody());
+            reviewListResponse.setLikes(review.getLikes());
+            reviewListResponse.setDislikes(review.getDislikes());
+            reviewListResponse.setUsers(review.getUsers());
+            reviewListResponse.setMovies(review.getMovies());
+            List<Category> categoryList = new ArrayList<>();
+            List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(review.getMovies().getId());
+            for(CategoryHasMovie categoryHasMovie : categoryHasMovies) {
+                categoryList.add(categoryHasMovie.getCategory());
+            }
+            reviewListResponse.setCategoryList(categoryList);
+            reviewListResponse.setDate(review.getDate());
+
+            reviewListResponses.add(reviewListResponse);
+        }
+        return reviewListResponses;
     }
 
     public List<Review> getbyMovieId(int id) {
