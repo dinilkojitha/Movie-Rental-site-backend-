@@ -45,8 +45,7 @@ public class MovieController {
 
     @PutMapping("/update/count/{id}")
     public String updateCount(@PathVariable int id){
-        movieService.updatecount(id);
-        return "success";
+        return movieService.updatecount(id);
     }
 
     @DeleteMapping("/delete/{id}")

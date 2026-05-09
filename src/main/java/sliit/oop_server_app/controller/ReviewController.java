@@ -27,6 +27,12 @@ public class ReviewController {
         return reviewService.getbyMovieId(id);
     }
 
+
+    @GetMapping("/user/{id}")
+    public List<Review> getByUserId(@PathVariable int id) {
+        return reviewService.getbyUserId(id);
+    }
+
     @PostMapping("/save")
     public Review saveUsers(@RequestBody Review reviews) {
         return reviewService.add(reviews);

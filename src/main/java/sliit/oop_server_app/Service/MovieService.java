@@ -206,14 +206,16 @@ public class MovieService {
     }
 
 
-    public void updatecount(Integer id) {
+    public String updatecount(Integer id) {
         movieRepository.findById(id).ifPresent(movie -> {
             // Handle null viewcount safety
             int currentCount = (movie.getViewcount() == null) ? 0 : movie.getViewcount();
             movie.setViewcount(currentCount + 1);
 
             movieRepository.save(movie);
+
         });
+        return "success";
     }
 
     @Transactional

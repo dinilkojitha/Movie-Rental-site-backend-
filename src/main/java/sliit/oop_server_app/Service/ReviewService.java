@@ -53,6 +53,10 @@ public class ReviewService {
         return reviewRepository.findByMovies_Id(id);
     }
 
+    public List<Review> getbyUserId(int id) {
+        return reviewRepository.findByUsers_Id(id);
+    }
+
     public Review add(Review data) {
         return reviewRepository.save(data);
     }

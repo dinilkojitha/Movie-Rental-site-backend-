@@ -39,6 +39,31 @@ public class UserService {
         return ResponseEntity.ok(dbUser);
     }
 
+    public ResponseEntity<?> processGoogleLogin(String email, String name, String picture) {
+        Optional<User> existingUser = usersRepository.findByGmail(email);
+
+        if (existingUser.isPresent()) {
+            User user = existingUser.get();
+            // Update name or image if they changed on Google
+            user.setName(name);
+//            user.setImage(picture);
+            usersRepository.save(user);
+            user.setPassword(null);
+            return ResponseEntity.ok(user);
+        } else {
+            // Create new account for first-time Google user
+            User newUser = new User();
+            newUser.setGmail(email);
+            newUser.setName(name);
+//            newUser.setImage(picture);
+            newUser.setAdmin((byte) 0);
+            newUser.setPassword(null); // No password for OAuth users
+
+            User saved = usersRepository.save(newUser);
+            return ResponseEntity.ok(saved);
+        }
+    }
+
     public List<User> register(List<User> User) {
         List<User> newUser = User.stream()
                 .filter(user -> !usersRepository.existsByGmail(user.getGmail()))

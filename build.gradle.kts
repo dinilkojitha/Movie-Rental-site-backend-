@@ -35,6 +35,7 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     runtimeOnly("com.mysql:mysql-connector-j")
+    implementation("com.google.api-client:google-api-client:2.0.0")
 }
 
 tasks.withType<Test> {
