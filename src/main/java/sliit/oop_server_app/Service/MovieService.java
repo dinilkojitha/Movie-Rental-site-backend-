@@ -173,7 +173,6 @@ public List<MovieResponse> getAllMovies() {
 //        return mapMovieToResponse(updated);
 //    }
 
-
     public String updateMovie(Integer id,MovieRequest request) {
 
         Movie existing = movieRepository.findById(id)
@@ -190,11 +189,17 @@ public List<MovieResponse> getAllMovies() {
         existing.setViewcount(request.getViewcount());
         existing.setPrice(request.getPrice());
         existing.setRatings(request.getRatings());
+
+        categoryHasMovieRepository.deleteByMovies_id(id);
         Movie updatedMovie = movieRepository.save(existing);
+
+
 
         System.out.println("Movie Updated: " + updatedMovie.getId());
         //    Map categories
         List<Integer> catIds = request.getCategoryId();
+
+
 
         if (catIds != null && !catIds.isEmpty()) {
             List<CategoryHasMovie> relations = catIds.stream().map(categoryId -> {
