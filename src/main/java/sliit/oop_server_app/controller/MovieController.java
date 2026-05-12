@@ -35,9 +35,9 @@ public class MovieController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<MovieResponse> update( @PathVariable Integer id,
-                                                 @RequestBody MovieRequest request){
-        return ResponseEntity.ok(movieService.updateMovie(id, request));
+    public String update( @PathVariable Integer id,
+                          @RequestBody MovieRequest request){
+        return movieService.updateMovie(id, request);
     }
 
     @PutMapping("/update/count/{id}")
