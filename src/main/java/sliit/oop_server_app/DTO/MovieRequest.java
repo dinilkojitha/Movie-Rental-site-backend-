@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import sliit.oop_server_app.entity.Actor;
 import sliit.oop_server_app.entity.Category;
+import sliit.oop_server_app.entity.Movie;
 
 import java.util.List;
 
@@ -16,39 +17,25 @@ import java.util.List;
 @Setter
 public class MovieRequest {
 
-    @NotBlank
     private String name;
-
-    @NotBlank
     private String country;
-
-    @Min(0)
     private int duration;
-
-    @Min(0)
     private double price;
-
-    @Min(0) @Max(10)
     private Double imdb;
-
-    @Min(0)
     private Double tomato;
-
-    @NotBlank
     private String language;
-
     private int viewcount;
     private String shortDescription;
     private String description ;
     private String image;
     private String link;
     private String trailerLink;
-
     private double hours;
+    private Integer ratings;
     private List<Actor> actors;
-
-    private List<Category> categoryId;
-
+    private Integer year;
+    private List<Integer> categoryId;
+    private String trailerlink;
 }
 
 

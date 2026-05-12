@@ -1,5 +1,6 @@
 package sliit.oop_server_app.Service;
 
+import org.springframework.http.RequestEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
@@ -15,6 +16,8 @@ import sliit.oop_server_app.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MovieService {
@@ -42,126 +45,73 @@ public class MovieService {
         this.categoryRepository = categoryRepository;
     }
 
-    @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
-    public List<MovieResponse> getAllMovies() {
-        // 1. Use the standard findAll() method
-        List<Movie> movies = movieRepository.findAll();
-        List<MovieResponse> movieResponseList = new ArrayList<>();
-
-        movies.forEach(movie -> {
-            MovieResponse movieResponse = new MovieResponse();
-
-            mapMovieToResponse(movie);
-
-            // 2. Your specific mechanism: Fetching via the Join Repository
-            List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
-            List<Category> cat = new ArrayList<>();
-
-            categoryHasMovies.forEach(categoryHasMovie -> {
-                cat.add(categoryHasMovie.getCategory());
-            });
-
-            movieResponse.setCategoryId(cat);
-            movieResponseList.add(movieResponse);
-        });
-        return movieResponseList;
-    }
-
-
-    public List<MovieResponse> searchMovies(String query) {
-        return movieRepository.findByNameContainingIgnoreCase(query)
-                .stream()
-                .map(movie -> {
-                    MovieResponse res = new MovieResponse();
-                    res.setName(movie.getName());
-                    res.setPrice(movie.getPrice());
-                    return res;
-                })
-                .toList();
-    }
-
-
-    public MovieResponse updateMovie(Integer id, MovieRequest request){
-
-        Movie existing = movieRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-
-        existing.setName(request.getName());
-        existing.setLanguage(request.getLanguage());
-        existing.setCountry(request.getCountry());
-        existing.setPrice(request.getPrice());
-        existing.setHours(request.getHours());
-        existing.setImdb(request.getImdb());
-        existing.setTomato(request.getTomato());
-        existing.setViewcount(request.getViewcount());
-        existing.setDescription(request.getDescription());
-        existing.setShortdescription(request.getShortDescription());
-        existing.setImage(request.getImage());
-        existing.setLink(request.getLink());
-        existing.setTrailerlink(request.getTrailerLink());
-
-        Movie updated = movieRepository.save(existing);
-
-//        MovieResponse response = new MovieResponse();
+////    @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
+//    public List<MovieResponse> getAllMovies() {
+//        // 1. Use the standard findAll() method
+//        List<Movie> movies = movieRepository.findAll();
+//        List<MovieResponse> movieResponseList = new ArrayList<>();
 //
-//        response.setName(updated.getName());
-//        response.setLanguage(updated.getLanguage());
-//        response.setCountry(updated.getCountry());
-//        response.setPrice(updated.getPrice());
-//        response.setHours(updated.getHours());
-//        response.setImdb(updated.getImdb());
-//        response.setTomato(updated.getTomato());
-//        response.setViewcount(updated.getViewcount());
-//        response.setDescription(updated.getDescription());
-//        response.setShortDescription(updated.getShortdescription());
-//        response.setImage(updated.getImage());
-//        response.setLink(updated.getLink());
-//        response.setTrailerLink(updated.getTrailerlink());
+//        movies.forEach(movie -> {
+//            MovieResponse movieResponse = new MovieResponse();
+//
+//            mapMovieToResponse(movie);
+//
+//            // 2. Your specific mechanism: Fetching via the Join Repository
+//            List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
+//            List<Category> cat = new ArrayList<>();
+//
+//            categoryHasMovies.forEach(categoryHasMovie -> {
+//                cat.add(categoryHasMovie.getCategory());
+//            });
+//
+//            movieResponse.setCategoryId(cat);
+//            movieResponseList.add(movieResponse);
+//        });
+//        return movieResponseList;
+//    }
 
-        return mapMovieToResponse(updated);
-    }
 
-    public MovieResponse createMovie(MovieRequest request, List<Integer> categoryIds){
+@Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
+public List<MovieResponse> getAllMovies() {
+    // 1. Use the standard findAll() method
+    List<Movie> movies = movieRepository.findAll();
+    List<MovieResponse> movieResponseList = new ArrayList<>();
 
-        Movie movie = new Movie();                      //  Entity Object creat for inputs
-        Category category = new Category();
+    movies.forEach(movie -> {
+        MovieResponse movieResponse = new MovieResponse();
 
-        movie.setName(request.getName());
-        movie.setLanguage(request.getLanguage());
-        movie.setCountry(request.getCountry());
-        movie.setPrice(request.getPrice());
-        movie.setHours(request.getHours());
-//        movie.setCategoryId(request.getCategoryId());
-        movie.setImdb(request.getImdb());
-        movie.setTomato(request.getTomato());
-        movie.setViewcount(request.getViewcount());
-        movie.setDescription(request.getDescription());
-        movie.setShortdescription(request.getShortDescription());
-        movie.setImage(request.getImage());
-        movie.setLink(request.getLink());
-        movie.setTrailerlink(request.getTrailerLink());
+        // Mapping basic fields
+        movieResponse.setId(movie.getId());
+        movieResponse.setName(movie.getName());
+        movieResponse.setLanguage(movie.getLanguage());
+        movieResponse.setCountry(movie.getCountry());
+        movieResponse.setHours(movie.getHours());
+        movieResponse.setShortDescription(movie.getShortdescription());
+        movieResponse.setDescription(movie.getDescription());
+        movieResponse.setImage(movie.getImage());
+        movieResponse.setLink(movie.getLink());
+        movieResponse.setTrailerLink(movie.getTrailerlink());
+        movieResponse.setImdb(movie.getImdb());
+        movieResponse.setTomato(movie.getTomato());
+        movieResponse.setViewcount(movie.getViewcount());
+        movieResponse.setYear(movie.getYear());
+        movieResponse.setPrice(movie.getPrice());
+        movieResponse.setRatings(movie.getRatings());
 
-        Movie saved = movieRepository.save(movie);
+        // 2. Your specific mechanism: Fetching via the Join Repository
+        List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
+        List<Category> cat = new ArrayList<>();
 
-//        MovieResponse response = new MovieResponse();   //  Response Object creat for outputs
-//        response.setName(saved.getName());
-//        response.setLanguage(saved.getLanguage());
-//        response.setCountry(saved.getCountry());
-//        response.setPrice(saved.getPrice());
-//        response.setHours(saved.getHours());
-//        response.setCategoryId(saved.getCategoryId());
-//        response.setImdb(saved.getImdb());
-//        response.setTomato(saved.getTomato());
-//        response.setViewcount(saved.getViewcount());
-//        response.setDescription(saved.getDescription());
-//        response.setShortDescription(saved.getShortdescription());
-//        response.setImage(saved.getImage());
-//        response.setLink(saved.getLink());
-//        response.setTrailerLink(saved.getTrailerlink());
+        categoryHasMovies.forEach(categoryHasMovie -> {
+            cat.add(categoryHasMovie.getCategory());
+        });
 
-        return mapMovieToResponse(saved);
-    }
+        movieResponse.setCategoryId(cat);
+        movieResponseList.add(movieResponse);
+    });
 
+    return movieResponseList;
+}
 
     // Helper method to convert Entity -> Response
     private MovieResponse mapMovieToResponse(Movie movie) {
@@ -185,6 +135,109 @@ public class MovieService {
 
         return response;
     }
+
+    public List<MovieResponse> searchMovies(String query) {
+        return movieRepository.findByNameContainingIgnoreCase(query)
+                .stream()
+                .map(movie -> {
+                    MovieResponse res = new MovieResponse();
+                    res.setName(movie.getName());
+                    res.setPrice(movie.getPrice());
+                    return res;
+                })
+                .toList();
+    }
+
+
+    public MovieResponse updateMovie(Integer id, MovieRequest request){
+
+
+
+        Movie existing = movieRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+
+//        existing.setName(request.getName());
+//        existing.setLanguage(request.getLanguage());
+//        existing.setCountry(request.getCountry());
+//        existing.setPrice(request.getPrice());
+//        existing.setHours(request.getHours());
+//        existing.setImdb(request.getImdb());
+//        existing.setTomato(request.getTomato());
+//        existing.setViewcount(request.getViewcount());
+//        existing.setDescription(request.getDescription());
+//        existing.setShortdescription(request.getShortDescription());
+//        existing.setImage(request.getImage());
+//        existing.setLink(request.getLink());
+//        existing.setTrailerlink(request.getTrailerLink());
+
+        Movie updated = movieRepository.save(existing);
+
+        return mapMovieToResponse(updated);
+    }
+
+//    public String createMovie(MovieRequest request){
+//
+//        Movie saved = movieRepository.save(request.getMovie());
+//
+//
+//        List<Integer> catids = request.getCategoryId();
+//        catids.forEach(categoryId -> {
+//           Category cats = categoryRepository.findCategoryById(categoryId);
+//           CategoryHasMovie catmovie = new CategoryHasMovie();
+//            catmovie.setCategory(cats);
+//            catmovie.setMovies(saved);
+//           categoryHasMovieRepository.save(catmovie);
+//        });
+//
+//        return "ok";
+//    }
+
+    public String createMovie(MovieRequest request) {
+
+        Movie movie = new Movie();
+        movie.setName(request.getName());
+        movie.setLanguage(request.getLanguage());
+        movie.setCountry(request.getCountry());
+        movie.setHours(request.getHours());
+        movie.setYear(request.getYear());
+        movie.setDescription(request.getDescription());
+        movie.setImage(request.getImage());
+        movie.setLink(request.getLink());
+//        movie.setTrailerlink(request.getTrailerlink());
+        movie.setImdb(request.getImdb());
+        movie.setTomato(request.getTomato());
+        movie.setViewcount(request.getViewcount());
+        movie.setPrice(request.getPrice());
+        movie.setRatings(request.getRatings());
+        Movie savedMovie = movieRepository.save(movie);
+
+
+        System.out.println("Movie saved: " + savedMovie.getId());
+        // 2. Map categories
+        List<Integer> catIds = request.getCategoryId();
+
+        if (catIds != null && !catIds.isEmpty()) {
+            List<CategoryHasMovie> relations = catIds.stream().map(categoryId -> {
+                Category cat = categoryRepository.findCategoryById(categoryId);
+                if (cat == null) {
+                    throw new RuntimeException("Category not found: " + categoryId);
+                }
+
+                CategoryHasMovie jointable = new CategoryHasMovie();
+                jointable.setCategory(cat);
+                jointable.setMovies(savedMovie);
+                return jointable;
+            }).collect(Collectors.toList());
+
+            // 3. Save all relations at once instead of in a loop
+            categoryHasMovieRepository.saveAll(relations);
+        }
+
+        return "ok";
+    }
+
+
+
 
     public String updateCount(Integer id) {
         movieRepository.findById(id).ifPresent(movie -> {

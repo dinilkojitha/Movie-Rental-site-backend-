@@ -1,12 +1,9 @@
 package sliit.oop_server_app.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import sliit.oop_server_app.entity.Category;
-import sliit.oop_server_app.entity.Movie;
 
 @Getter
 @Setter
@@ -23,7 +20,6 @@ public class CategoryHasMovie {
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @JsonIgnore
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "movies_id", nullable = false)

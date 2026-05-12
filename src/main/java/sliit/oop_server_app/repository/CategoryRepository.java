@@ -5,5 +5,8 @@ import org.springframework.stereotype.Repository;
 import sliit.oop_server_app.entity.Category;
 
 @Repository
-public interface CategoryRepository extends JpaRepository<Category, Integer> {
+public interface CategoryRepository extends JpaRepository<Category ,Integer > {
+
+    Category findCategoryById(int id);
+
 }

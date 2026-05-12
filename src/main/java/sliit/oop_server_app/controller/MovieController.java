@@ -30,9 +30,8 @@ public class MovieController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<MovieResponse> addMovie( @RequestBody MovieRequest request,
-                                                   @RequestBody List<Integer> categoryIds) {
-        return ResponseEntity.ok(movieService.createMovie(request, categoryIds));
+    public String addMovie( @RequestBody MovieRequest request) {
+        return movieService.createMovie(request);
     }
 
     @PutMapping("/update/{id}")

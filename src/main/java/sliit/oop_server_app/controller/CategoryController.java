@@ -27,8 +27,6 @@ public class CategoryController {
         if (categories.isEmpty()) {
             return java.util.Collections.emptyList();
         }
-
-
 //        System.out.print(categories);
         return categoryRepository.saveAll(categories);
     }

@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import sliit.oop_server_app.entity.Actor;
-import sliit.oop_server_app.entity.Movie;
 
 @Getter
 @Setter

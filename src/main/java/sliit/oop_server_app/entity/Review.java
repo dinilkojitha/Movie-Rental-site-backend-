@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import sliit.oop_server_app.entity.Movie;
-import sliit.oop_server_app.entity.User;
 
 import java.time.LocalDate;
 
