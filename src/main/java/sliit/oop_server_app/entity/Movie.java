@@ -1,7 +1,8 @@
 package sliit.oop_server_app.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,6 +54,7 @@ public class Movie {
     @Column(name = "trailerlink")
     private String trailerlink;
 
+    @Min(0) @Max(10)
     @Column(name = "imdb")
     private Double imdb;
 

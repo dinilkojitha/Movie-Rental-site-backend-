@@ -1,11 +1,10 @@
 package sliit.oop_server_app.controller;
 
-import jakarta.validation.Valid;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.Service.MovieService;
-import sliit.oop_server_app.entity.Movie;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import sliit.oop_server_app.DTO.MovieResponse;
+import sliit.oop_server_app.DTO.MovieRequest;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class MovieController {
 
     private final MovieService movieService;
 
-    public MovieController(MovieService movieService) {
+    public MovieController( MovieService movieService) {
         this.movieService = movieService;
     }
 
@@ -26,36 +25,40 @@ public class MovieController {
     }
 
     @GetMapping("/search")
-    public List<MovieResponse> search(@RequestParam String query) {
+    public List<MovieResponse> search( @RequestParam String query) {
         return movieService.searchMovies(query);
     }
 
     @PostMapping("/create")
-    public MovieResponse addMovie(@RequestBody Movie request, @RequestParam List<Integer> categoryIds) {
-        return movieService.createMovie(request, categoryIds);
+    public ResponseEntity<MovieResponse> addMovie( @RequestBody MovieRequest request,
+                                                   @RequestBody List<Integer> categoryIds) {
+        return ResponseEntity.ok(movieService.createMovie(request, categoryIds));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Movie> update(
-            @PathVariable int id,
-            @RequestBody Movie request){
-
+    public ResponseEntity<MovieResponse> update( @PathVariable Integer id,
+                                                 @RequestBody MovieRequest request){
         return ResponseEntity.ok(movieService.updateMovie(id, request));
     }
 
     @PutMapping("/update/count/{id}")
-    public String updateCount(@PathVariable int id){
-        return movieService.updatecount(id);
+    public String updateCount( @PathVariable int id){
+        return movieService.updateCount(id);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> delete(@PathVariable int id){
-        movieService.deletemovie(id);
+    public ResponseEntity<String> delete( @PathVariable Integer id){
+        movieService.deleteMovie(id);
         return ResponseEntity.ok("Movie deleted successfully");
     }
 
-//    @GetMapping("/years/{Year}")
-//    public List<?> movielist (@PathVariable String Year){
-//        return movieService.filterByYears(Year);
-//    }
+    @GetMapping("/filter/imdb/{imdb}")
+    public ResponseEntity<List<MovieResponse>> filterByImdb( @PathVariable Double imdb){
+        return ResponseEntity.ok(movieService.imdbFilter(imdb));
+    }
+
+    @GetMapping("/filter/year/{year}")
+    public ResponseEntity<List<MovieResponse>> filterByYear( @PathVariable Integer year){
+        return ResponseEntity.ok(movieService.yearFilter(year));
+    }
 }
