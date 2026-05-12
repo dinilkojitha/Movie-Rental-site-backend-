@@ -3,6 +3,7 @@ package sliit.oop_server_app.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.Service.ActorsService;
 import sliit.oop_server_app.entity.Actor;
 import sliit.oop_server_app.repository.ActorsRepository;
 
@@ -16,46 +17,28 @@ import java.util.Optional;
 public class ActorController {
 
     @Autowired
-    private ActorsRepository actorsRepository;
+    private ActorsService actorsService;
 
     @GetMapping(produces = "application/json")
     public List<Actor> get() {
-        return this.actorsRepository.findAll();
+       return actorsService.get();
     }
 
     @PostMapping("/save")
     public List<Actor> saveUsers(@RequestBody List<Actor> actors) {
-        if (actors.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return actorsRepository.saveAll(actors);
+       return actorsService.saveUsers(actors);
     }
 
     // UPDATE: Admin function
     @PutMapping("/update/{id}")
     public ResponseEntity<Actor> updateActor(@PathVariable int id, @RequestBody Actor actorDetails) {
-        Optional<Actor> actor = actorsRepository.findById(id);
-
-        if (actor.isPresent()) {
-            Actor existingActor = actor.get();
-            existingActor.setName(actorDetails.getName());
-            existingActor.setImage(actorDetails.getImage());
-            existingActor.setDescription(actorDetails.getDescription());
-            return ResponseEntity.ok(actorsRepository.save(existingActor));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return actorsService.updateActor(id, actorDetails);
     }
 
     // DELETE: Admin function
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteActor(@PathVariable int id) {
-        if (actorsRepository.existsById(id)) {
-            actorsRepository.deleteById(id);
-            return ResponseEntity.ok("Actor deleted successfully!");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+       return actorsService.deleteActor(id);
     }
 }
 

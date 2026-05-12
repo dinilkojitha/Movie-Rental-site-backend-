@@ -23,27 +23,10 @@ public class CategoryController {
     }
 
     @PostMapping("/save")
-    public List<Category> saveUsers(@RequestBody List<Category> categories) {
-        if (categories.isEmpty()) {
-            return java.util.Collections.emptyList();
-        }
-//        System.out.print(categories);
-        return categoryRepository.saveAll(categories);
+    public Category saveUsers(@RequestBody Category categories) {
+        return categoryRepository.save(categories);
     }
-    // UPDATE: Admin function
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable int id, @RequestBody Category categoryDetails) {
-        Optional<Category> category = categoryRepository.findById(id);
 
-        if (category.isPresent()) {
-            Category existingCategory = category.get();
-            existingCategory.setName(categoryDetails.getName());
-            existingCategory.setImg(categoryDetails.getImg());
-            return ResponseEntity.ok(categoryRepository.save(existingCategory));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
     // DELETE: Admin function
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable int id) {
