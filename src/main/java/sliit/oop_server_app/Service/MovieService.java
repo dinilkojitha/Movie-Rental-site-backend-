@@ -149,13 +149,11 @@ public List<MovieResponse> getAllMovies() {
     }
 
 
-    public MovieResponse updateMovie(Integer id, MovieRequest request){
-
-
-
-        Movie existing = movieRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-
+//    public MovieResponse updateMovie(Integer id, MovieRequest request){
+//
+//        Movie existing = movieRepository.findById(id)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+//
 //        existing.setName(request.getName());
 //        existing.setLanguage(request.getLanguage());
 //        existing.setCountry(request.getCountry());
@@ -169,28 +167,54 @@ public List<MovieResponse> getAllMovies() {
 //        existing.setImage(request.getImage());
 //        existing.setLink(request.getLink());
 //        existing.setTrailerlink(request.getTrailerLink());
+//
+//        Movie updated = movieRepository.save(existing);
+//
+//        return mapMovieToResponse(updated);
+//    }
 
-        Movie updated = movieRepository.save(existing);
 
-        return mapMovieToResponse(updated);
+    public String updateMovie(Integer id,MovieRequest request) {
+
+        Movie existing = movieRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+        existing.setName(request.getName());
+        existing.setCountry(request.getCountry());
+        existing.setHours(request.getHours());
+        existing.setYear(request.getYear());
+        existing.setDescription(request.getDescription());
+        existing.setImage(request.getImage());
+        existing.setLink(request.getLink());
+        existing.setImdb(request.getImdb());
+        existing.setTomato(request.getTomato());
+        existing.setViewcount(request.getViewcount());
+        existing.setPrice(request.getPrice());
+        existing.setRatings(request.getRatings());
+        Movie updatedMovie = movieRepository.save(existing);
+
+        System.out.println("Movie Updated: " + updatedMovie.getId());
+        //    Map categories
+        List<Integer> catIds = request.getCategoryId();
+
+        if (catIds != null && !catIds.isEmpty()) {
+            List<CategoryHasMovie> relations = catIds.stream().map(categoryId -> {
+                Category cat = categoryRepository.findCategoryById(categoryId);
+                if (cat == null) {
+                    throw new RuntimeException("Category not found: " + categoryId);
+                }
+
+                CategoryHasMovie joinTable = new CategoryHasMovie();
+                joinTable.setCategory(cat);
+                joinTable.setMovies(updatedMovie);
+                return joinTable;
+            }).collect(Collectors.toList());
+
+            //  Save all relations at once instead of in a loop
+            categoryHasMovieRepository.saveAll(relations);
+        }
+        return "Update Successful";
     }
 
-//    public String createMovie(MovieRequest request){
-//
-//        Movie saved = movieRepository.save(request.getMovie());
-//
-//
-//        List<Integer> catids = request.getCategoryId();
-//        catids.forEach(categoryId -> {
-//           Category cats = categoryRepository.findCategoryById(categoryId);
-//           CategoryHasMovie catmovie = new CategoryHasMovie();
-//            catmovie.setCategory(cats);
-//            catmovie.setMovies(saved);
-//           categoryHasMovieRepository.save(catmovie);
-//        });
-//
-//        return "ok";
-//    }
 
     public String createMovie(MovieRequest request) {
 
@@ -211,9 +235,8 @@ public List<MovieResponse> getAllMovies() {
         movie.setRatings(request.getRatings());
         Movie savedMovie = movieRepository.save(movie);
 
-
         System.out.println("Movie saved: " + savedMovie.getId());
-        // 2. Map categories
+        //    Map categories
         List<Integer> catIds = request.getCategoryId();
 
         if (catIds != null && !catIds.isEmpty()) {
@@ -223,17 +246,16 @@ public List<MovieResponse> getAllMovies() {
                     throw new RuntimeException("Category not found: " + categoryId);
                 }
 
-                CategoryHasMovie jointable = new CategoryHasMovie();
-                jointable.setCategory(cat);
-                jointable.setMovies(savedMovie);
-                return jointable;
+                CategoryHasMovie joinTable = new CategoryHasMovie();
+                joinTable.setCategory(cat);
+                joinTable.setMovies(savedMovie);
+                return joinTable;
             }).collect(Collectors.toList());
 
-            // 3. Save all relations at once instead of in a loop
+            //  Save all relations at once instead of in a loop
             categoryHasMovieRepository.saveAll(relations);
         }
-
-        return "ok";
+        return "Create Successful";
     }
 
 
