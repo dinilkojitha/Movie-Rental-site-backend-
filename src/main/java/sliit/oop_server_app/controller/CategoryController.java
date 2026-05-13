@@ -29,12 +29,12 @@ public class CategoryController {
 
     // DELETE: Admin function
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable int id) {
+    public String deleteCategory(@PathVariable int id) {
         if (categoryRepository.existsById(id)) {
             categoryRepository.deleteById(id);
-            return ResponseEntity.ok("Category deleted successfully!");
+            return "Category deleted successfully!";
         } else {
-            return ResponseEntity.notFound().build();
+            return "Category deleted failed!";
         }
     }
 }

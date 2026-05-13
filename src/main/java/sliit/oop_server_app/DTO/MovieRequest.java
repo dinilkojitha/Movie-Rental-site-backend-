@@ -29,13 +29,12 @@ public class MovieRequest {
     private String description ;
     private String image;
     private String link;
-    private String trailerLink;
+    private String trailerlink;
     private double hours;
     private Integer ratings;
     private List<Actor> actors;
     private Integer year;
     private List<Integer> categoryId;
-    private String trailerlink;
 }
 
 

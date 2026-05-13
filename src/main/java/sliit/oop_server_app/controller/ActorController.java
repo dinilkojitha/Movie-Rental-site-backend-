@@ -26,7 +26,7 @@ public class ActorController {
 
     @PostMapping("/save")
     public List<Actor> saveUsers(@RequestBody List<Actor> actors) {
-       return actorsService.saveUsers(actors);
+       return actorsService.saveActors(actors);
     }
 
     // UPDATE: Admin function

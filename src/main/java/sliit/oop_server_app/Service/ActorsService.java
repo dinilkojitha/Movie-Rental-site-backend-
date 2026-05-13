@@ -21,7 +21,7 @@ public class ActorsService {
     }
 
 
-    public List<Actor> saveUsers(@RequestBody List<Actor> actors) {
+    public List<Actor> saveActors(@RequestBody List<Actor> actors) {
         if (actors.isEmpty()) {
             return Collections.emptyList();
         }

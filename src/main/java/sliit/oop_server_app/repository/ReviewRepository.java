@@ -14,4 +14,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     List<Review> findByUsers_Id(Integer id);
 
     void deleteByMovies_id(Integer id);
+
+    List<Review> findByMovies_id(Integer id);
 }

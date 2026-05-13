@@ -12,6 +12,7 @@ import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.DTO.MovieRequest;
 import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.entity.Movie;
+import sliit.oop_server_app.entity.Review;
 import sliit.oop_server_app.repository.*;
 
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class MovieService {
 
     @Autowired
     private ActorsRepository actorsRepository;
+
+    @Autowired
+    private RentalsRepository rentalsRepository;
 
     @Autowired
     private ReviewRepository reviewRepository;
@@ -185,6 +189,7 @@ public List<MovieResponse> getAllMovies() {
         existing.setImage(request.getImage());
         existing.setLink(request.getLink());
         existing.setImdb(request.getImdb());
+        existing.setTrailerlink(request.getTrailerlink());
         existing.setTomato(request.getTomato());
         existing.setViewcount(request.getViewcount());
         existing.setPrice(request.getPrice());
@@ -232,7 +237,7 @@ public List<MovieResponse> getAllMovies() {
         movie.setDescription(request.getDescription());
         movie.setImage(request.getImage());
         movie.setLink(request.getLink());
-//        movie.setTrailerlink(request.getTrailerlink());
+        movie.setTrailerlink(request.getTrailerlink());
         movie.setImdb(request.getImdb());
         movie.setTomato(request.getTomato());
         movie.setViewcount(request.getViewcount());
@@ -277,14 +282,22 @@ public List<MovieResponse> getAllMovies() {
         return "success";
     }
 
+    @Transactional
     public void deleteMovie(Integer id) {
-        Movie movie = movieRepository.findById(id)
-                                     .orElseThrow(() ->  new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
+        movieRepository.findById(id).ifPresent(movie -> {
+            // 1. Delete Category links
+            List<CategoryHasMovie> cats = categoryHasMovieRepository.findByMovies_id(id);
+            categoryHasMovieRepository.deleteAll(cats);
 
-        List<CategoryHasMovie> mappings = categoryHasMovieRepository.findByMovies_id(id);
+            rentalsRepository.deleteByMovies_Id(id);
+            // 2. MISSING STEP: Delete Reviews (Ratings)
+            // You likely need a reviewRepository for this
+            List<Review> reviews = reviewRepository.findByMovies_id(id);
+            reviewRepository.deleteAll(reviews);
 
-        categoryHasMovieRepository.deleteAll(mappings);
-        movieRepository.delete(movie);
+            // 3. Finally delete the movie
+            movieRepository.delete(movie);
+        });
     }
 
     public List<MovieResponse> yearFilter(Integer year){
