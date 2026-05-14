@@ -12,9 +12,7 @@ public class RentalService {
 
     @Autowired
     private RentalsRepository rentalsRepository;
-
     public List<Rental> getAll() {
-
         List<Rental> rentals = rentalsRepository.findAll();
 
         return rentals.stream().map(rental -> {
@@ -25,11 +23,9 @@ public class RentalService {
             return r;
         }).toList();
     }
-
     public List<Rental> getByUser(int id) {
         return rentalsRepository.findByUsers_Id(id);
     }
-
     public Rental addnew(Rental data) {
         return rentalsRepository.save(data);
     }
