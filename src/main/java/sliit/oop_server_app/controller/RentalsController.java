@@ -14,6 +14,7 @@ import java.util.List;
 @RequestMapping(value = "/rentals")
 public class RentalsController {
     @Autowired
+
     private RentalService rentalService;
     @GetMapping(produces = "application/json")
     public List<Rental> get() {
