@@ -24,6 +24,11 @@ public class MovieController {
         return movieService.getAllMovies();
     }
 
+    @GetMapping("/trending")
+    public List<MovieResponse> getAllMoviesByRatings() {
+        return movieService.getAllMoviesByRatings();
+    }
+
     @GetMapping("/search")
     public List<MovieResponse> search( @RequestParam String query) {
         return movieService.searchMovies(query);
