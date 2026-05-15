@@ -8,8 +8,6 @@ import java.util.List;
 
 @Repository
 public interface RentalsRepository extends JpaRepository<Rental, Integer> {
-
     List<Rental> findByUsers_Id(Integer id);
-
     void deleteByMovies_Id(Integer id);
 }

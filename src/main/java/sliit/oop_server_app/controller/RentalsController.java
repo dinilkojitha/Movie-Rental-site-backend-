@@ -14,11 +14,8 @@ import java.util.List;
 @RequestMapping(value = "/rentals")
 public class RentalsController {
     @Autowired
+
     private RentalService rentalService;
-
-
-
-
     @GetMapping(produces = "application/json")
     public List<Rental> get() {
       return rentalService.getAll();
@@ -34,38 +31,6 @@ public class RentalsController {
       return rentalService.addnew(rentals);
     }
 
-//    @DeleteMapping("delete/{id}")
-//    public List<Rental> deleteRentedMovies(@PathVariable int id) {
-//        if(rentalsRepository.existsById(id)){
-//            rentalsRepository.deleteById(id);
-//        }else  {
-//            return Collections.emptyList();
-//        }
-//        return rentalsRepository.findAll();
-//
-//    }
-
-
-
-//    @PutMapping("/update")
-//    public ResponseEntity<List<FinalPage>> updateFinalPages(@RequestBody List<FinalPage> finals) {
-//        for (FinalPage fine : finals) {
-//            Optional<FinalPage> existing = finalPageRepository.findById(fine.getId());
-//            if (existing.isPresent()) {
-//                FinalPage updated = existing.get();
-//                updated.setTitle(fine.getTitle());
-//                updated.setDescription(fine.getDescription());
-//                updated.setImage(fine.getImage());
-//                updated.setAbout_detail(fine.getAbout_detail());
-//                updated.setAbout_title(fine.getAbout_title());
-//                // Add any other fields you want to update
-//                finalPageRepository.save(updated);
-//            }
-//        }
-//        // Return the full MainPage list (or filter as needed)
-//        List<FinalPage> mainPages = finalPageRepository.findAll();
-//        return ResponseEntity.ok(mainPages);
-//    }
 
 
 
