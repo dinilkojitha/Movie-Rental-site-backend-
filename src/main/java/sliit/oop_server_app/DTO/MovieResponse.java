@@ -33,7 +33,7 @@ public class MovieResponse {
     private Double imdb;
 
     private List<Category> categoryId;
-    private List<Actor> actors;
+    private List<Actor> actorsId;
 
 
 }

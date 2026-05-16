@@ -6,8 +6,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import sliit.oop_server_app.entity.ActorsHasMovie;
 
+import java.util.List;
+
 @Repository
 public interface Actors_has_moviesRepository extends JpaRepository<ActorsHasMovie, Integer> {
 
     void deleteAllByMoviesId(Integer id);
+
+    List<ActorsHasMovie> findByMovies_Id(Integer moviesId);
 }

@@ -7,12 +7,9 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 
-import sliit.oop_server_app.entity.CategoryHasMovie;
+import sliit.oop_server_app.entity.*;
 import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.DTO.MovieRequest;
-import sliit.oop_server_app.entity.Category;
-import sliit.oop_server_app.entity.Movie;
-import sliit.oop_server_app.entity.Review;
 import sliit.oop_server_app.repository.*;
 
 import java.util.ArrayList;
@@ -37,6 +34,9 @@ public class MovieService {
 
     @Autowired
     private ActorsRepository actorsRepository;
+
+    @Autowired
+    private Actors_has_moviesRepository ahas_moviesRepository;
 
     @Autowired
     private RentalsRepository rentalsRepository;
@@ -101,6 +101,13 @@ public List<MovieResponse> getAllMovies() {
         movieResponse.setYear(movie.getYear());
         movieResponse.setPrice(movie.getPrice());
         movieResponse.setRatings(movie.getRatings());
+
+        List<Actor> act = new ArrayList<>();
+        List<ActorsHasMovie> actorsHasMovies = actors_has_moviesRepository.findByMovies_Id(movie.getId());
+        actorsHasMovies.forEach(actorsHasMovie -> {
+            act.add(actorsHasMovie.getActors());
+        });
+        movieResponse.setActorsId(act);
 
         // 2. Your specific mechanism: Fetching via the Join Repository
         List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
@@ -195,29 +202,6 @@ public List<MovieResponse> getAllMovies() {
         return movieResponseList;
     }
 
-//    public MovieResponse updateMovie(Integer id, MovieRequest request){
-//
-//        Movie existing = movieRepository.findById(id)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-//
-//        existing.setName(request.getName());
-//        existing.setLanguage(request.getLanguage());
-//        existing.setCountry(request.getCountry());
-//        existing.setPrice(request.getPrice());
-//        existing.setHours(request.getHours());
-//        existing.setImdb(request.getImdb());
-//        existing.setTomato(request.getTomato());
-//        existing.setViewcount(request.getViewcount());
-//        existing.setDescription(request.getDescription());
-//        existing.setShortdescription(request.getShortDescription());
-//        existing.setImage(request.getImage());
-//        existing.setLink(request.getLink());
-//        existing.setTrailerlink(request.getTrailerLink());
-//
-//        Movie updated = movieRepository.save(existing);
-//
-//        return mapMovieToResponse(updated);
-//    }
 
     public String updateMovie(Integer id,MovieRequest request) {
 
@@ -288,6 +272,20 @@ public List<MovieResponse> getAllMovies() {
         Movie savedMovie = movieRepository.save(movie);
 
         System.out.println("Movie saved: " + savedMovie.getId());
+
+        List<Integer> actorsId = request.getActorsId();
+        if (actorsId != null && !actorsId.isEmpty()) {
+           actorsId.forEach(actorId -> {
+               ActorsHasMovie actorsHasMovie = new ActorsHasMovie();
+               Optional<Actor> actor = actorsRepository.findById(actorId);
+               actor.ifPresent(eachactor -> {
+                   actorsHasMovie.setActors(eachactor);
+                   actorsHasMovie.setMovies(savedMovie);
+                   actors_has_moviesRepository.save(actorsHasMovie);
+               });
+           });
+        }
+
         //    Map categories
         List<Integer> catIds = request.getCategoryId();
 
