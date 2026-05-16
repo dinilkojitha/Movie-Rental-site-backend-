@@ -51,7 +51,7 @@ public class UserService {
             user.setPassword(null);
             return ResponseEntity.ok(user);
         } else {
-            // Create new account for first-time Google user
+//             Create a new Account for first-time Google user
             User newUser = new User();
             newUser.setGmail(email);
             newUser.setName(name);
@@ -93,11 +93,15 @@ public class UserService {
         return ResponseEntity.ok(existingUser);
     }
 
+    // --- Updated: Sort users by ratecount from highest to lowest ---
     public List<User> sortUser() {
-        List<User> User = usersRepository.findAll();
-        User.sort((u1, u2) -> u1.getName().compareToIgnoreCase(u2.getName()));
-        User.forEach(user -> user.setPassword(null));
-        return User;
+        // 1. Fetch sorted data using repository magic method
+        List<User> sortedUsers = usersRepository.findAllByOrderByRatecountDesc();
+
+        // 2. Data Protection: Hide passwords before sending to frontend
+        sortedUsers.forEach(user -> user.setPassword(null));
+
+        return sortedUsers;
     }
 
     public ResponseEntity<?> searchUserByGmail(String gmail) {
