@@ -153,6 +153,48 @@ public List<MovieResponse> getAllMovies() {
     }
 
 
+    @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
+    public List<MovieResponse> getAllMoviesByRatings() {
+        // 1. Use the standard findAll() method
+        List<Movie> movies = movieRepository.findByOrderByViewcountDesc();
+        List<MovieResponse> movieResponseList = new ArrayList<>();
+
+        movies.forEach(movie -> {
+            MovieResponse movieResponse = new MovieResponse();
+
+            // Mapping basic fields
+            movieResponse.setId(movie.getId());
+            movieResponse.setName(movie.getName());
+            movieResponse.setLanguage(movie.getLanguage());
+            movieResponse.setCountry(movie.getCountry());
+            movieResponse.setHours(movie.getHours());
+            movieResponse.setShortDescription(movie.getShortdescription());
+            movieResponse.setDescription(movie.getDescription());
+            movieResponse.setImage(movie.getImage());
+            movieResponse.setLink(movie.getLink());
+            movieResponse.setTrailerLink(movie.getTrailerlink());
+            movieResponse.setImdb(movie.getImdb());
+            movieResponse.setTomato(movie.getTomato());
+            movieResponse.setViewcount(movie.getViewcount());
+            movieResponse.setYear(movie.getYear());
+            movieResponse.setPrice(movie.getPrice());
+            movieResponse.setRatings(movie.getRatings());
+
+            // 2. Your specific mechanism: Fetching via the Join Repository
+            List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
+            List<Category> cat = new ArrayList<>();
+
+            categoryHasMovies.forEach(categoryHasMovie -> {
+                cat.add(categoryHasMovie.getCategory());
+            });
+
+            movieResponse.setCategoryId(cat);
+            movieResponseList.add(movieResponse);
+        });
+
+        return movieResponseList;
+    }
+
 //    public MovieResponse updateMovie(Integer id, MovieRequest request){
 //
 //        Movie existing = movieRepository.findById(id)

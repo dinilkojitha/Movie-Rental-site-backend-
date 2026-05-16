@@ -16,5 +16,12 @@ public interface MovieRepository extends JpaRepository<Movie, Integer> {
     List<Movie> findByNameContainingIgnoreCase(@NotNull String name);
     List<Movie> findByYearEquals(@NotNull Integer year);
     List<Movie> findByImdbGreaterThanEqual(@NotNull Double imdb);
+    List<Movie> findByViewcountGreaterThanEqual(@NotNull Integer viewcount);
+
+    @Query("SELECT MAX(m.viewcount) FROM Movie m")
+    Integer findMaxViewcount();
+
+    List<Movie> findByOrderByViewcountDesc();
+    List<Movie> findByOrderByViewcountAsc();
 
 }
