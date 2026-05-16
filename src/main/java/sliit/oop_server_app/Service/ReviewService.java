@@ -4,12 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
+import sliit.oop_server_app.DTO.ReviewListRequest;
 import sliit.oop_server_app.DTO.ReviewListResponse;
-import sliit.oop_server_app.entity.Category;
-import sliit.oop_server_app.entity.CategoryHasMovie;
-import sliit.oop_server_app.entity.Review;
+import sliit.oop_server_app.entity.*;
 import sliit.oop_server_app.repository.CategoryHasMovieRepository;
+import sliit.oop_server_app.repository.MovieRepository;
 import sliit.oop_server_app.repository.ReviewRepository;
+import sliit.oop_server_app.repository.UsersRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,36 @@ public class ReviewService {
     private ReviewRepository reviewRepository;
 
     @Autowired
+    private UsersRepository usersRepository;
+
+    @Autowired
+    private MovieRepository movieRepository;
+
+    @Autowired
     private CategoryHasMovieRepository categoryHasMovieRepository;
+
+    public Review addnewReview(ReviewListRequest review) {
+        Review newReview = new Review();
+        newReview.setBody(review.getBody());
+
+        // Default null likes/dislikes to 0 safely
+        newReview.setLikes(review.getLikes() != null ? review.getLikes() : 0);
+        newReview.setDislikes(review.getDislikes() != null ? review.getDislikes() : 0);
+        newReview.setDate(review.getDate());
+
+        // 1. Fix: Look up user using usersid
+        User user = usersRepository.findById(review.getUsersid())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + review.getUsersid()));
+        newReview.setUsers(user);
+
+        // 2. Fix: Look up movie using moviesid
+        Movie movie = movieRepository.findById(review.getMoviesid())
+                .orElseThrow(() -> new RuntimeException("Movie not found with ID: " + review.getMoviesid()));
+        newReview.setMovies(movie);
+
+        // 3. Save and return the fully populated object
+        return reviewRepository.save(newReview);
+    }
 
     public List<ReviewListResponse> getAll() {
 
@@ -57,9 +87,7 @@ public class ReviewService {
         return reviewRepository.findByUsers_Id(id);
     }
 
-    public Review add(Review data) {
-        return reviewRepository.save(data);
-    }
+
 
     public Review update(Review data, int id) {
         // Use .map() for a cleaner way to handle Optional or throw an error

@@ -15,12 +15,12 @@ public class Category {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Size(max = 45)
-    @Column(name = "name", length = 45)
+    @Size(max = 80)
+    @Column(name = "name", length = 80)
     private String name;
 
-    @Lob
-    @Column(name = "img")
+    @Size(max = 400)
+    @Column(name = "img", length = 400)
     private String img;
 
 }

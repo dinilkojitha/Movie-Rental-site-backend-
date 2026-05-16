@@ -21,11 +21,9 @@ public class ActorsService {
     }
 
 
-    public List<Actor> saveActors(@RequestBody List<Actor> actors) {
-        if (actors.isEmpty()) {
-            return Collections.emptyList();
-        }
-        return actorsRepository.saveAll(actors);
+    public Actor saveActors(@RequestBody Actor actors) {
+
+        return actorsRepository.save(actors);
     }
 
     public ResponseEntity<Actor> updateActor(@PathVariable int id, @RequestBody Actor actorDetails) {

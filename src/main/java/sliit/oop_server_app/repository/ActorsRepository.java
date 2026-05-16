@@ -6,4 +6,5 @@ import sliit.oop_server_app.entity.Actor;
 
 @Repository
 public interface ActorsRepository extends JpaRepository<Actor, Integer> {
+
 }

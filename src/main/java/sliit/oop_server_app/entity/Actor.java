@@ -19,12 +19,12 @@ public class Actor {
     @Column(name = "name", length = 45)
     private String name;
 
-    @Lob
-    @Column(name = "image")
+    @Size(max = 500)
+    @Column(name = "image", length = 500)
     private String image;
 
-    @Size(max = 45)
-    @Column(name = "description", length = 45)
+    @Size(max = 800)
+    @Column(name = "description", length = 800)
     private String description;
 
 }

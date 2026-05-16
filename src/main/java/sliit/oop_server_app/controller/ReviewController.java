@@ -2,6 +2,7 @@ package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.DTO.ReviewListRequest;
 import sliit.oop_server_app.DTO.ReviewListResponse;
 import sliit.oop_server_app.Service.ReviewService;
 import sliit.oop_server_app.entity.Review;
@@ -34,8 +35,8 @@ public class ReviewController {
     }
 
     @PostMapping("/save")
-    public Review saveUsers(@RequestBody Review reviews) {
-        return reviewService.add(reviews);
+    public Review saveUsers(@RequestBody ReviewListRequest reviews) {
+        return reviewService.addnewReview(reviews);
     }
 
     @PutMapping("/update")
