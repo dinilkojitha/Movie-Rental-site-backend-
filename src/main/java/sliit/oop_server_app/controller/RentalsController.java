@@ -13,8 +13,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/rentals")
 public class RentalsController {
-    @Autowired
 
+
+    @Autowired
     private RentalService rentalService;
     @GetMapping(produces = "application/json")
     public List<Rental> get() {
