@@ -94,6 +94,9 @@ public class UserService {
         if (userDetails.getName() != null) existingUser.setName(userDetails.getName());
         if (userDetails.getGmail() != null) existingUser.setGmail(userDetails.getGmail());
 
+        // Update admin status role (1 for admin, 0 for regular user)
+        if (userDetails.getAdmin() != null) existingUser.setAdmin(userDetails.getAdmin());
+
         usersRepository.save(existingUser);
         existingUser.setPassword(null);
         return ResponseEntity.ok(existingUser);
