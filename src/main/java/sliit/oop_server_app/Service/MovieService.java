@@ -44,36 +44,16 @@ public class MovieService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
+    @Autowired
+    private ReviewService reviewService;
+
     public MovieService(MovieRepository movieRepository, CategoryRepository categoryRepository) {
         this.movieRepository = movieRepository;
         this.categoryRepository = categoryRepository;
     }
-
-////    @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
-//    public List<MovieResponse> getAllMovies() {
-//        // 1. Use the standard findAll() method
-//        List<Movie> movies = movieRepository.findAll();
-//        List<MovieResponse> movieResponseList = new ArrayList<>();
-//
-//        movies.forEach(movie -> {
-//            MovieResponse movieResponse = new MovieResponse();
-//
-//            mapMovieToResponse(movie);
-//
-//            // 2. Your specific mechanism: Fetching via the Join Repository
-//            List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
-//            List<Category> cat = new ArrayList<>();
-//
-//            categoryHasMovies.forEach(categoryHasMovie -> {
-//                cat.add(categoryHasMovie.getCategory());
-//            });
-//
-//            movieResponse.setCategoryId(cat);
-//            movieResponseList.add(movieResponse);
-//        });
-//        return movieResponseList;
-//    }
-
 
 @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
 public List<MovieResponse> getAllMovies() {
@@ -325,17 +305,27 @@ public List<MovieResponse> getAllMovies() {
     @Transactional
     public void deleteMovie(Integer id) {
         movieRepository.findById(id).ifPresent(movie -> {
-            // 1. Delete Category links
+
+            // Delete Category links
             List<CategoryHasMovie> cats = categoryHasMovieRepository.findByMovies_id(id);
             categoryHasMovieRepository.deleteAll(cats);
 
             rentalsRepository.deleteByMovies_Id(id);
-            // 2. MISSING STEP: Delete Reviews (Ratings)
-            // You likely need a reviewRepository for this
-            List<Review> reviews = reviewRepository.findByMovies_id(id);
-            reviewRepository.deleteAll(reviews);
 
-            // 3. Finally delete the movie
+            // MISSING STEP: Delete Reviews and replies (Ratings)
+            List<Review> reviews = reviewRepository.findByMovies_id(id);
+
+            reviews.forEach(review -> {
+                reviewService.delete(review.getId());
+            });
+
+//            reviews.forEach(review -> {
+//               List<Reply> rep = replyRepository.findByReview_Id(review.getId());
+//               replyRepository.deleteAll(rep);
+//            });
+//            reviewRepository.deleteAll(reviews);
+
+            // Finally delete the movie
             movieRepository.delete(movie);
         });
     }
