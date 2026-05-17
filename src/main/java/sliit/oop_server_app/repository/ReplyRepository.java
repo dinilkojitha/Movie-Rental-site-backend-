@@ -11,7 +11,7 @@ import java.util.List;
 public interface ReplyRepository extends JpaRepository<Reply, Integer> {
     List<Reply> findByReview_Id(Integer id);
     List<Reply> findByUsers_Id(Integer id);
-
+    void deleteByReview_Id(Integer reviewId);
     void deleteByReview_Movies_Id(Integer movieId);
 
 

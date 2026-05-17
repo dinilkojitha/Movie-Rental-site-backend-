@@ -311,12 +311,12 @@ public List<MovieResponse> getAllMovies() {
             // 3. Find all reviews connected to this movie
             List<Review> reviews = reviewRepository.findByMovies_id(id);
 
-            // 4. Cascade delete all nested child replies linked to those reviews first
+            // 4. FIRST: Cascade delete all nested child replies linked to these reviews
             reviews.forEach(review -> {
-                replyRepository.deleteByReview_Movies_Id(review.getId());
+                replyRepository.deleteByReview_Id(review.getId()); // Use Review ID here
             });
 
-            // 5. Safely drop the orphan review records now that child constraints are cleared
+            // 5. SECOND: Safely drop the parent review records now that child constraints are cleared
             reviewRepository.deleteAll(reviews);
 
             // 6. Finally, drop the primary movie node completely
