@@ -61,6 +61,16 @@ public class ReviewController {
         return reviewService.dislike(id);
     }
 
+
+    @GetMapping("/bestfive")
+    public List<Review> getbestfive() {
+        return reviewService.sortByLikesTop5();
+    }
+
+
+
+
+
     @PostMapping("/reply")
     public Reply addreply(@RequestBody Reply reply) {
         return replyService.saveNewReview(reply);
@@ -79,6 +89,8 @@ public class ReviewController {
     public String deletereply(@PathVariable int id) {
         return replyService.deleteReply(id);
     }
+
+
 
 
 

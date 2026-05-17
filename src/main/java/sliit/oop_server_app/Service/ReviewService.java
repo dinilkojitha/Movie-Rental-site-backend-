@@ -138,4 +138,9 @@ public class ReviewService {
         reviewRepository.deleteById(id);
         return "Deleted Successful";
     }
+
+
+    public List<Review> sortByLikesTop5() {
+        return reviewRepository.findTop5ByOrderByLikesDesc();
+    }
 }

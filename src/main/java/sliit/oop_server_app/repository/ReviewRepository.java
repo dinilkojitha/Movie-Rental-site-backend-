@@ -16,4 +16,6 @@ public interface ReviewRepository extends JpaRepository<Review, Integer> {
     void deleteByMovies_id(Integer id);
 
     List<Review> findByMovies_id(Integer id);
+
+    List<Review> findTop5ByOrderByLikesDesc();
 }
