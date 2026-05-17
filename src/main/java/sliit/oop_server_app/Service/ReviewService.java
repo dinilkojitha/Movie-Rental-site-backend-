@@ -7,10 +7,7 @@ import org.springframework.web.server.ResponseStatusException;
 import sliit.oop_server_app.DTO.ReviewListRequest;
 import sliit.oop_server_app.DTO.ReviewListResponse;
 import sliit.oop_server_app.entity.*;
-import sliit.oop_server_app.repository.CategoryHasMovieRepository;
-import sliit.oop_server_app.repository.MovieRepository;
-import sliit.oop_server_app.repository.ReviewRepository;
-import sliit.oop_server_app.repository.UsersRepository;
+import sliit.oop_server_app.repository.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +24,9 @@ public class ReviewService {
 
     @Autowired
     private MovieRepository movieRepository;
+
+    @Autowired
+    private ReplyRepository replyRepository;
 
     @Autowired
     private CategoryHasMovieRepository categoryHasMovieRepository;
@@ -129,11 +129,13 @@ public class ReviewService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found"));
     }
 
-    public int delete(int id) {
+    public String delete(int id) {
         if (!reviewRepository.existsById(id)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Review not found");
         }
+        List<Reply> rip = replyRepository.findByReview_Id(id);
+        replyRepository.deleteAll(rip);
         reviewRepository.deleteById(id);
-        return id;
+        return "Deleted Successful";
     }
 }
