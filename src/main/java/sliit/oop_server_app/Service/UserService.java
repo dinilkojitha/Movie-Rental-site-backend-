@@ -35,6 +35,11 @@ public class UserService {
         if (!passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid password");
         }
+
+        int currentRate = (dbUser.getRatecount() == null) ? 0 : dbUser.getRatecount();
+        dbUser.setRatecount(currentRate + 1);
+        usersRepository.save(dbUser);
+
         dbUser.setPassword(null);
         return ResponseEntity.ok(dbUser);
     }
@@ -44,20 +49,21 @@ public class UserService {
 
         if (existingUser.isPresent()) {
             User user = existingUser.get();
-            // Update name or image if they changed on Google
             user.setName(name);
-//            user.setImage(picture);
+
+            int currentRate = (user.getRatecount() == null) ? 0 : user.getRatecount();
+            user.setRatecount(currentRate + 1);
+
             usersRepository.save(user);
             user.setPassword(null);
             return ResponseEntity.ok(user);
         } else {
-//             Create a new Account for first-time Google user
             User newUser = new User();
             newUser.setGmail(email);
             newUser.setName(name);
-//            newUser.setImage(picture);
             newUser.setAdmin((byte) 0);
-            newUser.setPassword(null); // No password for OAuth users
+            newUser.setPassword(null);
+            newUser.setRatecount(1);
 
             User saved = usersRepository.save(newUser);
             return ResponseEntity.ok(saved);
@@ -88,19 +94,17 @@ public class UserService {
         if (userDetails.getName() != null) existingUser.setName(userDetails.getName());
         if (userDetails.getGmail() != null) existingUser.setGmail(userDetails.getGmail());
 
+        // Update admin status role (1 for admin, 0 for regular user)
+        if (userDetails.getAdmin() != null) existingUser.setAdmin(userDetails.getAdmin());
+
         usersRepository.save(existingUser);
         existingUser.setPassword(null);
         return ResponseEntity.ok(existingUser);
     }
 
-    // --- Updated: Sort users by ratecount from highest to lowest ---
     public List<User> sortUser() {
-        // 1. Fetch sorted data using repository magic method
         List<User> sortedUsers = usersRepository.findAllByOrderByRatecountDesc();
-
-        // 2. Data Protection: Hide passwords before sending to frontend
         sortedUsers.forEach(user -> user.setPassword(null));
-
         return sortedUsers;
     }
 
