@@ -23,6 +23,12 @@ public class RentalService {
             return r;
         }).toList();
     }
+
+    public String deleteRental(Integer id) {
+        rentalsRepository.deleteById(id);
+        return "Rental Deleted Successfully";
+    }
+
     public List<Rental> getByUser(int id) {
         return rentalsRepository.findByUsers_Id(id);
     }

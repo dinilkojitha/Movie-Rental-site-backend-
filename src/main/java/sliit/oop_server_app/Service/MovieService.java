@@ -1,6 +1,5 @@
 package sliit.oop_server_app.Service;
 
-import org.springframework.http.RequestEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
@@ -48,6 +47,10 @@ public class MovieService {
     public MovieService(MovieRepository movieRepository, CategoryRepository categoryRepository) {
         this.movieRepository = movieRepository;
         this.categoryRepository = categoryRepository;
+    }
+
+    public Optional<Movie> getById(int id) {
+        return movieRepository.findById(id);
     }
 
 @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
