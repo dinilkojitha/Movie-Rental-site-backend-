@@ -35,8 +35,6 @@ public class MovieService {
     @Autowired
     private ActorsRepository actorsRepository;
 
-    @Autowired
-    private Actors_has_moviesRepository ahas_moviesRepository;
 
     @Autowired
     private RentalsRepository rentalsRepository;
@@ -46,9 +44,6 @@ public class MovieService {
 
     @Autowired
     private ReplyRepository replyRepository;
-
-    @Autowired
-    private ReviewService reviewService;
 
     public MovieService(MovieRepository movieRepository, CategoryRepository categoryRepository) {
         this.movieRepository = movieRepository;
@@ -306,26 +301,25 @@ public List<MovieResponse> getAllMovies() {
     public void deleteMovie(Integer id) {
         movieRepository.findById(id).ifPresent(movie -> {
 
-            // Delete Category links
+            // 1. Delete Category link associations
             List<CategoryHasMovie> cats = categoryHasMovieRepository.findByMovies_id(id);
             categoryHasMovieRepository.deleteAll(cats);
 
+            // 2. Clear transactional history logs
             rentalsRepository.deleteByMovies_Id(id);
 
-            // MISSING STEP: Delete Reviews and replies (Ratings)
+            // 3. Find all reviews connected to this movie
             List<Review> reviews = reviewRepository.findByMovies_id(id);
 
+            // 4. Cascade delete all nested child replies linked to those reviews first
             reviews.forEach(review -> {
-                reviewService.delete(review.getId());
+                replyRepository.deleteByReview_Movies_Id(review.getId());
             });
 
-//            reviews.forEach(review -> {
-//               List<Reply> rep = replyRepository.findByReview_Id(review.getId());
-//               replyRepository.deleteAll(rep);
-//            });
-//            reviewRepository.deleteAll(reviews);
+            // 5. Safely drop the orphan review records now that child constraints are cleared
+            reviewRepository.deleteAll(reviews);
 
-            // Finally delete the movie
+            // 6. Finally, drop the primary movie node completely
             movieRepository.delete(movie);
         });
     }
