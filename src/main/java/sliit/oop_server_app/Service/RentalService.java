@@ -18,6 +18,7 @@ public class RentalService {
         return rentals.stream().map(rental -> {
             Rental r = new Rental();
             r.setId(rental.getId());
+            r.setDate(rental.getDate());
             r.setUsers(rental.getUsers());
             r.setMovies(rental.getMovies());
             return r;

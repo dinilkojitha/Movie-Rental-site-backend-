@@ -29,7 +29,8 @@ public class ReplyService {
     public List<Reply> findByReview_Id(Integer id) {
         return replyRepository.findByReview_Id(id);
     }
-    public Reply editReply(@RequestBody Reply reply) {
+
+    public Reply editReply(Reply reply) {
         replyRepository.findById(reply.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return replyRepository.save(reply);
     }

@@ -199,7 +199,8 @@ public List<MovieResponse> getAllMovies() {
         existing.setPrice(request.getPrice());
         existing.setRatings(request.getRatings());
 
-        categoryHasMovieRepository.deleteByMovies_id(id);
+        List<CategoryHasMovie> categoryHasMovie = categoryHasMovieRepository.findByMovies_id(existing.getId());
+        categoryHasMovieRepository.deleteAll(categoryHasMovie);
         Movie updatedMovie = movieRepository.save(existing);
 
 
@@ -318,6 +319,8 @@ public List<MovieResponse> getAllMovies() {
             reviews.forEach(review -> {
                 replyRepository.deleteByReview_Id(review.getId()); // Use Review ID here
             });
+
+            actors_has_moviesRepository.deleteAllByMoviesId(id);
 
             // 5. SECOND: Safely drop the parent review records now that child constraints are cleared
             reviewRepository.deleteAll(reviews);
