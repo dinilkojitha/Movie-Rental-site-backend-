@@ -40,6 +40,14 @@ public class ReplyService {
         return "Reply with name " + reply.getUsers().getName() + " has been deleted";
     }
 
+    public Reply replyViewedUpdate(Integer id){
+        Reply reply = replyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if(!reply.getViewed()){
+            reply.setViewed(true);
+        }
+        return replyRepository.save(reply);
+    }
+
     public Reply saveNewReview(Reply reply) {
         Reply newreview = new Reply();
         newreview.setUsers(reply.getUsers());
