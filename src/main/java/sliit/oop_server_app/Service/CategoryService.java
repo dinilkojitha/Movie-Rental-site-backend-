@@ -39,6 +39,11 @@ public class CategoryService {
 
     public String deleteCategory( int id) {
         if (categoryRepository.existsById(id)) {
+            List<CategoryHasMovie> all = categoryHasMovieRepository.findByCategory_id(id);
+            categoryHasMovieRepository.deleteAll(all);
+            all.forEach(singleCategoryHasMovie -> {
+                movieRepository.delete(singleCategoryHasMovie.getMovies());
+            });
             categoryRepository.deleteById(id);
             return "Category deleted successfully!";
         } else {
