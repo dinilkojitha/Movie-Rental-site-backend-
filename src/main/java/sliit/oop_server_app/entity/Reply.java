@@ -25,6 +25,9 @@ public class Reply {
     @Column(name = "`like`")
     private Integer like;
 
+    @Column(name = "viewd")
+    private Byte viewd;
+
     @Column(name = "dislikes")
     private Integer dislikes;
 
@@ -32,6 +35,7 @@ public class Reply {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "review_id", nullable = false)
     private Review review;
+
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
