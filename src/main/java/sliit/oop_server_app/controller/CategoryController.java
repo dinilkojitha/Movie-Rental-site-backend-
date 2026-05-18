@@ -2,6 +2,7 @@ package sliit.oop_server_app.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.Service.CategoryService;
 import sliit.oop_server_app.entity.Category;
 import sliit.oop_server_app.entity.Movie;
@@ -34,7 +35,7 @@ public class CategoryController {
     }
 
     @GetMapping("/filter/{id}")
-    public List<Movie> getByFilter(@PathVariable int id){
+    public List<MovieResponse> getByFilter(@PathVariable int id){
         return categoryService.getByCategoryFilterd(id);
     }
 }
