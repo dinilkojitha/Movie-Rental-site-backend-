@@ -25,6 +25,9 @@ public class Reply {
     @Column(name = "`like`")
     private Integer like;
 
+    @Column(name = "viewd")
+    private Byte viewd;
+
     @Column(name = "dislikes")
     private Integer dislikes;
 
