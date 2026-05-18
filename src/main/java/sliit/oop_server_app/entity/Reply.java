@@ -36,6 +36,7 @@ public class Reply {
     @JoinColumn(name = "review_id", nullable = false)
     private Review review;
 
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "users_id", nullable = false)
