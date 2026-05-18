@@ -33,6 +33,10 @@ public class RentalsController {
     }
 
 
+    @DeleteMapping("/delete/{id}")
+    public String deleteUsers(@PathVariable int id) {
+        return rentalService.deleteRental(id);
+    }
 
 
 }

@@ -35,6 +35,11 @@ public class UserService {
         if (!passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
             return ResponseEntity.badRequest().body("Invalid password");
         }
+
+        int currentRate = (dbUser.getRatecount() == null) ? 0 : dbUser.getRatecount();
+        dbUser.setRatecount(currentRate + 1);
+        usersRepository.save(dbUser);
+
         dbUser.setPassword(null);
         return ResponseEntity.ok(dbUser);
     }
@@ -44,20 +49,21 @@ public class UserService {
 
         if (existingUser.isPresent()) {
             User user = existingUser.get();
-            // Update name or image if they changed on Google
             user.setName(name);
-//            user.setImage(picture);
+
+            int currentRate = (user.getRatecount() == null) ? 0 : user.getRatecount();
+            user.setRatecount(currentRate + 1);
+
             usersRepository.save(user);
             user.setPassword(null);
             return ResponseEntity.ok(user);
         } else {
-            // Create new account for first-time Google user
             User newUser = new User();
             newUser.setGmail(email);
             newUser.setName(name);
-//            newUser.setImage(picture);
             newUser.setAdmin((byte) 0);
-            newUser.setPassword(null); // No password for OAuth users
+            newUser.setPassword(null);
+            newUser.setRatecount(1);
 
             User saved = usersRepository.save(newUser);
             return ResponseEntity.ok(saved);
@@ -88,16 +94,18 @@ public class UserService {
         if (userDetails.getName() != null) existingUser.setName(userDetails.getName());
         if (userDetails.getGmail() != null) existingUser.setGmail(userDetails.getGmail());
 
+        // Update admin status role (1 for admin, 0 for regular user)
+        if (userDetails.getAdmin() != null) existingUser.setAdmin(userDetails.getAdmin());
+
         usersRepository.save(existingUser);
         existingUser.setPassword(null);
         return ResponseEntity.ok(existingUser);
     }
 
     public List<User> sortUser() {
-        List<User> User = usersRepository.findAll();
-        User.sort((u1, u2) -> u1.getName().compareToIgnoreCase(u2.getName()));
-        User.forEach(user -> user.setPassword(null));
-        return User;
+        List<User> sortedUsers = usersRepository.findAllByOrderByRatecountDesc();
+        sortedUsers.forEach(user -> user.setPassword(null));
+        return sortedUsers;
     }
 
     public ResponseEntity<?> searchUserByGmail(String gmail) {

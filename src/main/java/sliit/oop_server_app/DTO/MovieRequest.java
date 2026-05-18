@@ -32,7 +32,7 @@ public class MovieRequest {
     private String trailerlink;
     private double hours;
     private Integer ratings;
-    private List<Actor> actors;
+    private List<Integer> actorsId;
     private Integer year;
     private List<Integer> categoryId;
 }

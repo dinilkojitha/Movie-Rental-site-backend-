@@ -25,7 +25,7 @@ public class ActorController {
     }
 
     @PostMapping("/save")
-    public List<Actor> saveUsers(@RequestBody List<Actor> actors) {
+    public Actor saveUsers(@RequestBody Actor actors) {
        return actorsService.saveActors(actors);
     }
 

@@ -5,8 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.DTO.MovieRequest;
+import sliit.oop_server_app.entity.Movie;
 
 import java.util.List;
+import java.util.Optional;
 
 //@CrossOrigin(origins = "*")
 @RestController
@@ -19,6 +21,10 @@ public class MovieController {
         this.movieService = movieService;
     }
 
+    @GetMapping("/{id}")
+    public Optional<Movie> get(@PathVariable int id) {
+        return movieService.getById(id);
+    }
     @GetMapping("/all")
     public List<MovieResponse> getAll() {
         return movieService.getAllMovies();

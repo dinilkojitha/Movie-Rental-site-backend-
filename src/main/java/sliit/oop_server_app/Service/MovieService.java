@@ -1,18 +1,14 @@
 package sliit.oop_server_app.Service;
 
-import org.springframework.http.RequestEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
 
-import sliit.oop_server_app.entity.CategoryHasMovie;
+import sliit.oop_server_app.entity.*;
 import sliit.oop_server_app.DTO.MovieResponse;
 import sliit.oop_server_app.DTO.MovieRequest;
-import sliit.oop_server_app.entity.Category;
-import sliit.oop_server_app.entity.Movie;
-import sliit.oop_server_app.entity.Review;
 import sliit.oop_server_app.repository.*;
 
 import java.util.ArrayList;
@@ -38,42 +34,24 @@ public class MovieService {
     @Autowired
     private ActorsRepository actorsRepository;
 
+
     @Autowired
     private RentalsRepository rentalsRepository;
 
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private ReplyRepository replyRepository;
+
     public MovieService(MovieRepository movieRepository, CategoryRepository categoryRepository) {
         this.movieRepository = movieRepository;
         this.categoryRepository = categoryRepository;
     }
 
-////    @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
-//    public List<MovieResponse> getAllMovies() {
-//        // 1. Use the standard findAll() method
-//        List<Movie> movies = movieRepository.findAll();
-//        List<MovieResponse> movieResponseList = new ArrayList<>();
-//
-//        movies.forEach(movie -> {
-//            MovieResponse movieResponse = new MovieResponse();
-//
-//            mapMovieToResponse(movie);
-//
-//            // 2. Your specific mechanism: Fetching via the Join Repository
-//            List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
-//            List<Category> cat = new ArrayList<>();
-//
-//            categoryHasMovies.forEach(categoryHasMovie -> {
-//                cat.add(categoryHasMovie.getCategory());
-//            });
-//
-//            movieResponse.setCategoryId(cat);
-//            movieResponseList.add(movieResponse);
-//        });
-//        return movieResponseList;
-//    }
-
+    public Optional<Movie> getById(int id) {
+        return movieRepository.findById(id);
+    }
 
 @Transactional(readOnly = true) // Crucial for your loop-and-fetch mechanism
 public List<MovieResponse> getAllMovies() {
@@ -101,6 +79,13 @@ public List<MovieResponse> getAllMovies() {
         movieResponse.setYear(movie.getYear());
         movieResponse.setPrice(movie.getPrice());
         movieResponse.setRatings(movie.getRatings());
+
+        List<Actor> act = new ArrayList<>();
+        List<ActorsHasMovie> actorsHasMovies = actors_has_moviesRepository.findByMovies_Id(movie.getId());
+        actorsHasMovies.forEach(actorsHasMovie -> {
+            act.add(actorsHasMovie.getActors());
+        });
+        movieResponse.setActorsId(act);
 
         // 2. Your specific mechanism: Fetching via the Join Repository
         List<CategoryHasMovie> categoryHasMovies = categoryHasMovieRepository.findByMovies_id(movie.getId());
@@ -195,29 +180,6 @@ public List<MovieResponse> getAllMovies() {
         return movieResponseList;
     }
 
-//    public MovieResponse updateMovie(Integer id, MovieRequest request){
-//
-//        Movie existing = movieRepository.findById(id)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Movie not found"));
-//
-//        existing.setName(request.getName());
-//        existing.setLanguage(request.getLanguage());
-//        existing.setCountry(request.getCountry());
-//        existing.setPrice(request.getPrice());
-//        existing.setHours(request.getHours());
-//        existing.setImdb(request.getImdb());
-//        existing.setTomato(request.getTomato());
-//        existing.setViewcount(request.getViewcount());
-//        existing.setDescription(request.getDescription());
-//        existing.setShortdescription(request.getShortDescription());
-//        existing.setImage(request.getImage());
-//        existing.setLink(request.getLink());
-//        existing.setTrailerlink(request.getTrailerLink());
-//
-//        Movie updated = movieRepository.save(existing);
-//
-//        return mapMovieToResponse(updated);
-//    }
 
     public String updateMovie(Integer id,MovieRequest request) {
 
@@ -288,6 +250,20 @@ public List<MovieResponse> getAllMovies() {
         Movie savedMovie = movieRepository.save(movie);
 
         System.out.println("Movie saved: " + savedMovie.getId());
+
+        List<Integer> actorsId = request.getActorsId();
+        if (actorsId != null && !actorsId.isEmpty()) {
+           actorsId.forEach(actorId -> {
+               ActorsHasMovie actorsHasMovie = new ActorsHasMovie();
+               Optional<Actor> actor = actorsRepository.findById(actorId);
+               actor.ifPresent(eachactor -> {
+                   actorsHasMovie.setActors(eachactor);
+                   actorsHasMovie.setMovies(savedMovie);
+                   actors_has_moviesRepository.save(actorsHasMovie);
+               });
+           });
+        }
+
         //    Map categories
         List<Integer> catIds = request.getCategoryId();
 
@@ -327,17 +303,26 @@ public List<MovieResponse> getAllMovies() {
     @Transactional
     public void deleteMovie(Integer id) {
         movieRepository.findById(id).ifPresent(movie -> {
-            // 1. Delete Category links
+
+            // 1. Delete Category link associations
             List<CategoryHasMovie> cats = categoryHasMovieRepository.findByMovies_id(id);
             categoryHasMovieRepository.deleteAll(cats);
 
+            // 2. Clear transactional history logs
             rentalsRepository.deleteByMovies_Id(id);
-            // 2. MISSING STEP: Delete Reviews (Ratings)
-            // You likely need a reviewRepository for this
+
+            // 3. Find all reviews connected to this movie
             List<Review> reviews = reviewRepository.findByMovies_id(id);
+
+            // 4. FIRST: Cascade delete all nested child replies linked to these reviews
+            reviews.forEach(review -> {
+                replyRepository.deleteByReview_Id(review.getId()); // Use Review ID here
+            });
+
+            // 5. SECOND: Safely drop the parent review records now that child constraints are cleared
             reviewRepository.deleteAll(reviews);
 
-            // 3. Finally delete the movie
+            // 6. Finally, drop the primary movie node completely
             movieRepository.delete(movie);
         });
     }
