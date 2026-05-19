@@ -67,8 +67,5 @@ public class MovieController {
         return ResponseEntity.ok(movieService.imdbFilter(imdb));
     }
 
-    @GetMapping("/filter/year/{year}")
-    public ResponseEntity<List<MovieResponse>> filterByYear( @PathVariable Integer year){
-        return ResponseEntity.ok(movieService.yearFilter(year));
-    }
+
 }

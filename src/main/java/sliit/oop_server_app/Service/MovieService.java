@@ -199,7 +199,8 @@ public List<MovieResponse> getAllMovies() {
         existing.setPrice(request.getPrice());
         existing.setRatings(request.getRatings());
 
-        categoryHasMovieRepository.deleteByMovies_id(id);
+        List<CategoryHasMovie> categoryHasMovie = categoryHasMovieRepository.findByMovies_id(existing.getId());
+        categoryHasMovieRepository.deleteAll(categoryHasMovie);
         Movie updatedMovie = movieRepository.save(existing);
 
 
@@ -319,6 +320,8 @@ public List<MovieResponse> getAllMovies() {
                 replyRepository.deleteByReview_Id(review.getId()); // Use Review ID here
             });
 
+            actors_has_moviesRepository.deleteAllByMoviesId(id);
+
             // 5. SECOND: Safely drop the parent review records now that child constraints are cleared
             reviewRepository.deleteAll(reviews);
 
@@ -327,19 +330,40 @@ public List<MovieResponse> getAllMovies() {
         });
     }
 
-    public List<MovieResponse> yearFilter(Integer year){
-        List<Movie> movies = movieRepository.findByYearEquals(year);
 
-        return movies.stream()
-                .map(this::mapMovieToResponse)
-                .toList();
-    }
 
     public List<MovieResponse> imdbFilter(Double imdb){
-        List<Movie> movies = movieRepository.findByImdbGreaterThanEqual(imdb);
+        List<Movie> movielist = movieRepository.findByImdbGreaterThanEqual(imdb);
 
-        return movies.stream()
-                .map(this::mapMovieToResponse)
-                .toList();
+        List<MovieResponse> movies = new ArrayList<>();
+        movielist.forEach(movie -> {
+            MovieResponse movieResponse = new MovieResponse();
+
+            movieResponse.setId(movie.getId());
+            movieResponse.setName(movie.getName());
+            movieResponse.setLanguage(movie.getLanguage());
+            movieResponse.setCountry(movie.getCountry());
+            movieResponse.setHours(movie.getHours());
+            movieResponse.setShortDescription(movie.getShortdescription());
+            movieResponse.setDescription(movie.getDescription());
+            movieResponse.setImage(movie.getImage());
+            movieResponse.setLink(movie.getLink());
+            movieResponse.setTrailerLink(movie.getTrailerlink());
+            movieResponse.setImdb(movie.getImdb());
+            movieResponse.setTomato(movie.getTomato());
+            movieResponse.setViewcount(movie.getViewcount());
+            movieResponse.setYear(movie.getYear());
+            movieResponse.setPrice(movie.getPrice());
+            movieResponse.setRatings(movie.getRatings());
+
+            List<Actor> act = new ArrayList<>();
+            List<ActorsHasMovie> actorsHasMovies = actors_has_moviesRepository.findByMovies_Id(movie.getId());
+            actorsHasMovies.forEach(actorsHasMovie -> {
+                act.add(actorsHasMovie.getActors());
+            });
+            movieResponse.setActorsId(act);
+            movies.add(movieResponse);
+        });
+        return  movies;
     }
 }

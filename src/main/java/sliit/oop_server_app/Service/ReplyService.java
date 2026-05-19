@@ -29,7 +29,8 @@ public class ReplyService {
     public List<Reply> findByReview_Id(Integer id) {
         return replyRepository.findByReview_Id(id);
     }
-    public Reply editReply(@RequestBody Reply reply) {
+
+    public Reply editReply(Reply reply) {
         replyRepository.findById(reply.getId()).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return replyRepository.save(reply);
     }
@@ -38,6 +39,14 @@ public class ReplyService {
         Reply reply = replyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         replyRepository.deleteById(id);
         return "Reply with name " + reply.getUsers().getName() + " has been deleted";
+    }
+
+    public Reply replyViewedUpdate(Integer id){
+        Reply reply = replyRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        if(!reply.getViewed()){
+            reply.setViewed(true);
+        }
+        return replyRepository.save(reply);
     }
 
     public Reply saveNewReview(Reply reply) {

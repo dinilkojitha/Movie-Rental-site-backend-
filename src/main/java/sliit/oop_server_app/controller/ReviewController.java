@@ -80,6 +80,10 @@ public class ReviewController {
         return replyService.findByReview_Id(id);
     }
 
+    @PostMapping("/reply/viewed/{id}")
+    public Reply updateViewed(@PathVariable int id){
+        return replyService.replyViewedUpdate(id);
+    }
     @PutMapping("/reply/edit")
     public Reply editreply(@RequestBody Reply reply) {
         return replyService.editReply(reply);
