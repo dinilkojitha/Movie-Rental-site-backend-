@@ -1,6 +1,14 @@
 # 🎬 Movie Rental REST API
+![Java](https://img.shields.io/badge/java-white.svg?style=for-the-badge&logo=openjdk&logoColor=%23ED8B00)
+![Spring Boot](https://img.shields.io/badge/springboot-%236DB33F.svg?style=for-the-badge&logo=springboot&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-02303A.svg?style=for-the-badge&logo=Gradle&logoColor=white)
+![Lombok](https://img.shields.io/badge/Lombok-%23BC4521.svg?style=for-the-badge&logoColor=white)
+![License](https://img.shields.io/badge/License-Educational-%230075BE.svg?style=for-the-badge)
+![REST API](https://img.shields.io/badge/REST-API-%23005571.svg?style=for-the-badge)
+![SLIIT](https://img.shields.io/badge/SLIIT-OOP_Module-black.svg?style=for-the-badge&labelColor=orange&color=%2316537e&label=SLIIT&message=OOP_Module&logo=&logoColor=white)
 
-A backend REST API for a Movie Rental platform built with **Java Spring Boot** as part of the OOP module at **SLIIT**. The system handles movies, users, rentals, reviews, ratings, and more — following clean OOP principles with a layered architecture.
+> A backend REST API for a Movie Rental platform built with **Java Spring Boot** as part of the OOP module at **SLIIT**. The system handles movies, users, rentals, reviews, ratings, and more — following clean OOP principles with a layered architecture.
 
 ---
 
@@ -199,7 +207,17 @@ http://localhost:9878/swagger-ui/index.html
 > Built as part of the Object-Oriented Programming (OOP) module at Sri Lanka Institute of Information Technology (SLIIT).
 
 ---
+## 👨‍💻 Authors
 
+- **Dinil Kojitha**            
+- **Tharushmie Samiswrya**  
+- **Madhawa Mirihagalla**  
+- **Dewmina T.G.R.S**       
+- **Doane A.J.J**           
+- **Gunawardhana D.M.P**    
+> _SLIIT, BSc IT (First Year)_
+
+---
 ## 📄 License
 
 This project is for educational purposes as part of the SLIIT OOP module.
